@@ -2559,7 +2559,7 @@ class Window(Container):
 
         return NotImplemented
 
-    def _scroll_down(self) -> "NotImplementedOrNone":
+    def _scroll_down(self) -> NotImplementedOrNone:  # Remove quotes from type annotation
         "Scroll window down."
         info = self.render_info
 
