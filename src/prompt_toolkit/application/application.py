@@ -985,9 +985,14 @@ class Application(Generic[_AppResult]):
                 # See whether a loop was installed already. If so, use that.
                 # That's required for the input hooks to work, they are
                 # installed using `set_event_loop`.
-                loop = asyncio.get_running_loop()
-            except RuntimeError:
-                # No loop installed. Run like usual.
+                try:
+                    loop = asyncio.get_running_loop()
+                except RuntimeError:
+                    # No loop installed. Run like usual.
+                    return asyncio.run(coro)
+            except asyncio.InvalidStateError:
+                # asyncio.run() will install a new event loop if none is running
+                # in the current thread.
                 return asyncio.run(coro)
             else:
                 # Use existing loop.
