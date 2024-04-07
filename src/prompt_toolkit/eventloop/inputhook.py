@@ -70,6 +70,14 @@ def new_eventloop_with_inputhook(
 ) -> AbstractEventLoop:
     """
     Create a new event loop with the given inputhook.
+    The `inputhook` will be called every time the event loop is blocked,
+    this is typically when reading from stdin.
+    """
+    loop = asyncio.get_running_loop()
+    if loop.is_running():
+        raise RuntimeError("The event loop is already running")
+    loop.set_inputhook(inputhook)
+    return loop
     """
     selector = InputHookSelector(selectors.DefaultSelector(), inputhook)
     loop = asyncio.SelectorEventLoop(selector)
