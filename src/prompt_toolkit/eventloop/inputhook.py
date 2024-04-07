@@ -63,13 +63,19 @@ class InputHookContext:
 
 
 InputHook: TypeAlias = Callable[[InputHookContext], None]
-
+-----------------------------------------------------
+import asyncio
 
 def new_eventloop_with_inputhook(
     inputhook: Callable[[InputHookContext], None]
 ) -> AbstractEventLoop:
     """
     Create a new event loop with the given inputhook.
+    """
+    loop = asyncio.new_event_loop()
+    loop.set_exception_handler(inputhook)
+    return loop
+-----------------------------------------------------
     """
     selector = InputHookSelector(selectors.DefaultSelector(), inputhook)
     loop = asyncio.SelectorEventLoop(selector)
