@@ -200,12 +200,19 @@ class StdoutProxy:
         """
         Write the given text to stdout and flush.
         If an application is running, use `run_in_terminal`.
+
+```python
+        """
+        Write the given text to the output and flush it.
         """
 
         def write_and_flush() -> None:
             if self.raw:
                 self._output.write_raw(text)
             else:
+                self._output.write(text.encode())
+                self._output.flush()
+```
                 self._output.write(text)
 
             self._output.flush()

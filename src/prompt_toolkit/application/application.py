@@ -982,13 +982,23 @@ class Application(Generic[_AppResult]):
             # IPython was setting the input hook by installing an event loop
             # previously.
             try:
-                # See whether a loop was installed already. If so, use that.
-                # That's required for the input hooks to work, they are
-                # installed using `set_event_loop`.
-                loop = asyncio.get_running_loop()
-            except RuntimeError:
-                # No loop installed. Run like usual.
-                return asyncio.run(coro)
+```python
+# See whether a running loop already exists, if so use it
+# This is necessary for the input hooks to work, they are
+# installed using `set_event_loop`
+try:
+    loop = asyncio.get_running_loop()
+except RuntimeError:
+    # No loop installed. Run like usual.
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        return asyncio.run(coro)
+    finally:
+        asyncio.run(loop.shutdown_asyncgens())
+        loop.run_until_complete(loop.shutdown_asyncs())
+        loop.close()
+```
             else:
                 # Use existing loop.
                 return loop.run_until_complete(coro)
