@@ -206,6 +206,9 @@ class StdoutProxy:
             if self.raw:
                 self._output.write_raw(text)
             else:
+                # Write to the original stdout.
+                self._original_write(text)
+                self._original_flush()
                 self._output.write(text)
 
             self._output.flush()
