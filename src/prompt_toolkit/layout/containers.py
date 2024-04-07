@@ -2559,8 +2559,8 @@ class Window(Container):
 
         return NotImplemented
 
-    def _scroll_down(self) -> "NotImplementedOrNone":
-        "Scroll window down."
+    def _scroll_down(self) -> NotImplementedOrNone:
+        # Scroll window down.
         info = self.render_info
 
         if info is None:
