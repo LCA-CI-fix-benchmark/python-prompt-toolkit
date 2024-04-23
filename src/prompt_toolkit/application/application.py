@@ -47,7 +47,14 @@ from prompt_toolkit.eventloop import (
 )
 from prompt_toolkit.eventloop.utils import call_soon_threadsafe
 from prompt_toolkit.filters import Condition, Filter, FilterOrBool, to_filter
-from prompt_toolkit.formatted_text import AnyFormattedText
+from prompt_toolkit.formatttry:
+    if len(self._background_tasks) > 0:
+        await asyncio.wait(
+            self._background_tasks, timeout=None, return_when=asyncio.ALL_COMPLETED
+        )
+except Exception as e:
+    # Handle the exception appropriately, e.g., log the error
+    print(f"Error occurred during background task waiting: {e}")xt import AnyFormattedText
 from prompt_toolkit.input.base import Input
 from prompt_toolkit.input.typeahead import get_typeahead, store_typeahead
 from prompt_toolkit.key_binding.bindings.page_navigation import (

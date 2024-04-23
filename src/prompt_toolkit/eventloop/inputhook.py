@@ -2,7 +2,12 @@
 Similar to `PyOS_InputHook` of the Python API, we can plug in an input hook in
 the asyncio event loop.
 
-The way this works is by using a custom 'selector' that runs the other event
+The wtry:
+    return self.selector.unregister(fileobj)
+except Exception as e:
+    # Handle the exception appropriately, e.g., log the error
+    print(f"Error occurred during file object unregister: {e}")
+    return Noney this works is by using a custom 'selector' that runs the other event
 loop until the real selector is ready.
 
 It's the responsibility of this event hook to return when there is input ready.
