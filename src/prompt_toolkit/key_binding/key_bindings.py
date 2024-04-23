@@ -10,8 +10,45 @@ Typical usage::
     kb = KeyBindings()
 
     @kb.add(Keys.ControlX, Keys.ControlC, filter=INSERT)
-    def handler(event):
-        # Handle ControlX-ControlC key sequence.
+    def handler(e        """
+        Remove a key binding.
+
+        This expects either a function that was given to `add` method as
+        parameter or a sequence of key bindings.
+
+        Raises `ValueError` when no bindings was found.
+
+        Usage::
+
+            remove(handler)  # Pass handler.
+            remove('c-x', 'c-a')  # Or pass the key bindings.
+        """
+        found = False
+        bindings_to_remove = []
+
+        if callable(args[0]):
+            assert len(args) == 1
+            function = args[0]
+
+            # Remove the given function.
+            for b in self.bindings:
+                if b.handler == function:
+                    bindings_to_remove.append(b)
+                    found = True
+
+        else:
+            assert len(args) > 0
+            args = cast(Tuple[Union[Keys, str]], args)
+
+            # Remove this sequence of key bindings.
+            keys = tuple(_parse_key(k) for k in args)
+
+            for b in self.bindings:
+                if b.keys == keys:
+                    bindings_to_remove.append(b)
+
+        for b in bindings_to_remove:
+            self.bindings.remove(b)ontrolC key sequence.
         pass
 
 It is also possible to combine multiple KeyBindings objects. We do this in the
