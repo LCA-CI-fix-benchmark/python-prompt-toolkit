@@ -1,6 +1,78 @@
-from __future__ import annotations
+from __future__ import annotatioimport os
 
+def write_import tempfile
+import osimport shutil
+import tempfile
+
+# Remove the test directory aimport shutil
+import tempfile
+
+# Remove timport os
+
+for i in range(10):
+    with open(os.import tempfile
 import os
+
+# setup:import os
+import shutil
+
+subdir = os.path.join(test_dir, "subdir")
+os.mkdir(subdir)
+write_test_files(subdir, "abcdefghij")
+
+# Lambda function to return the list of paths
+get_paths = lambda: [subdir]
+
+with chdir(test_dir):
+    try:
+        # Perform operations within the test directory
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+# Remove the subdirectory after the test completes
+shutil.rmtree(subdir) a test dir with 10 files
+test_dir = tempfile.mkdtemp()
+write_test_files(test_dir)
+
+# Add a .csv file to the test directory
+csv_file_path = os.path.join(test_dir, "test.csv")
+with open(csv_file_path, "w") as csv_file:
+    csv_file.write("CSV content")join(test_dir, str(i) * 2), "wb") as out:
+        out.write(b"")
+
+# Specify the behavior when the minimum input length is 1 and there is text of length 1 for completionst directory after the test completes
+shutil.rmtree(test_dir)
+
+def test_pathcompleter_respects_completions_under_min_input_len():
+    # setup: create a test dir with 10 files
+    test_dir = tempfile.mkdtemp()
+    write_test_files(test_dir)
+
+    # Specify the behavior when the minimum input length is 1 and there is no text for completiontest completes
+shutil.rmtree(test_dir)
+
+def test_pathcompleter_completes_files_in_absolute_directory():
+    # setup: create a test dir with 10 files
+    test_dir = tempfile.mkdtemp()
+    write_test_files(test_dir)
+
+    expected = sorted(str(i) for i in range(10)): create a test dir with 10 files
+test_dir = tempfile.mkdtemp()
+write_test_files(test_dir)
+
+expected = sorted(str(i) for i in range(10))
+
+if not test_dir.endswith(os.path.sep):
+    # Handle the condition where test_dir does not end with the OS path separator
+    test_dir += os.path.seples(test_dir, names=None):
+    """Write test files in test_dir using the names list."""
+    names = names or range(10)
+    try:
+        for i in names:
+            with open(os.path.join(test_dir, str(i)), "wb") as out:
+                out.write(b"")
+    except Exception as e:
+        print(f"An error occurred: {e}")ort os
 import re
 import shutil
 import tempfile

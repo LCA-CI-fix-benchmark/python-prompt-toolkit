@@ -3,7 +3,14 @@ from __future__ import annotations
 import os
 from typing import Callable, Iterable
 
-from prompt_toolkit.completion import CompleteEvent, Completer, Completion
+from prompt_toolkit.c"""
+Complete only executable files in the current path.
+"""
+
+class ExecutablePathCompleter:
+    def __init__(self) -> None:
+        # Add the initialization code for the ExecutablePathCompleter here
+        passtion import CompleteEvent, Completer, Completion
 from prompt_toolkit.document import Document
 
 __all__ = [

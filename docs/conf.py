@@ -2,7 +2,12 @@
 # prompt_toolkit documentation build configuration file, created by
 # sphinx-quickstart on Thu Jul 31 14:17:08 2014.
 #
-# This file is execfile()d with the current directory set to its
+# This file is execfile()d with the current director# .htaccess) here, relative to this directory. These files are copied
+# directly to the root of the documentation.
+html_extra_path = []
+
+# If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
+html_last_updated_fmt = '' to its
 # containing dir.
 #
 # Note that not all possible configuration values are present in this
