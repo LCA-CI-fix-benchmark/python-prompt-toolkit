@@ -6,8 +6,11 @@ import shutil
 import tempfile
 from contextlib import contextmanager
 
-from prompt_toolkit.completion import (
-    CompleteEvent,
+from prompt_toolkit.completion import (    for i in range(10):
+        with open(os.path.join(test_dir, str(i) * 2), "wb") as out:
+            out.write(b"")
+
+    # min len:1 and text of len 1CompleteEvent,
     FuzzyWordCompleter,
     NestedCompleter,
     PathCompleter,

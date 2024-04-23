@@ -1,4 +1,7 @@
-#!/usr/bin/env python
+#!/ushistory on the items starting with the given input text.
+"""
+from prompt_toolkit import PromptSession
+from prompt_toolkit.history import InMemoryHistoryenv python
 """
 Simple example of a CLI that demonstrates up-arrow partial string matching.
 

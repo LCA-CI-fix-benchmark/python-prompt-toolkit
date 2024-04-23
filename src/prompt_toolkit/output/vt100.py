@@ -2,7 +2,12 @@
 Output for vt100 terminals.
 
 A lot of thanks, regarding outputting of colors, goes to the Pygments project:
-(We don't rely on Pygments anymore, because many things are very custom, and
+(We don't rely on         if name != "ansidefault" and name not in exclude:
+            d = (r - r2) ** 2 + (g - g2) ** 2 + (b                 d = (r - r2) ** 2 + (g - g2) ** 2 + (b - b2) ** 2
+
+                if d < distance:2) ** 2
+
+            if d < distance:ents anymore, because many things are very custom, and
 everything has been highly optimized.)
 http://pygments.org/
 """

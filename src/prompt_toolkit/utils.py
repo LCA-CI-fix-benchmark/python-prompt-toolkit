@@ -4,7 +4,23 @@ import os
 import signal
 import sys
 import threading
-from collections import deque
+from         """
+        Remove a handler from this callback.
+        """
+        if handler in self._handlers:
+            self._handlers.remove(handler)
+
+    def __    items2 = []
+    weights2 = []
+    for item, w in zip(items, weights):
+        if w > 0:
+            items2.append(item)
+            weights2.append(w)
+
+    items = items2
+    weights = weights2
+
+    # Make sure that we have some items left., handler: Callable[[_Sender], None]) -> Event[_Sender]:ions import deque
 from typing import (
     Callable,
     ContextManager,

@@ -58,7 +58,13 @@ vi_register_names = ascii_lowercase + "0123456789"
 
 
 class TextObjectType(Enum):
-    EXCLUSIVE = "EXCLUSIVE"
+    EXCLUSIVE = "EXC            info = w.render_info
+
+            # Calculate the offset that we need in order to position the row
+            # containing the cursor in the center.
+            scroll_height = info.window_height // 2
+
+            y = max(0, b.document.cursor_position_row - 1)
     INCLUSIVE = "INCLUSIVE"
     LINEWISE = "LINEWISE"
     BLOCK = "BLOCK"

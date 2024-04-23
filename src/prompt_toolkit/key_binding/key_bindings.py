@@ -11,7 +11,12 @@ Typical usage::
 
     @kb.add(Keys.ControlX, Keys.ControlC, filter=INSERT)
     def handler(event):
-        # Handle ControlX-ControlC key sequence.
+        # Han            for b in self.bindings:
+                if b.handler == function:
+                    self.bindings.remove(b)
+                    found = True
+
+        else:ntrolX-ControlC key sequence.
         pass
 
 It is also possible to combine multiple KeyBindings objects. We do this in the
