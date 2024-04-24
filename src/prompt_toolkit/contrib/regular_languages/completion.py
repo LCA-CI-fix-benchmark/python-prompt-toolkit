@@ -2,8 +2,24 @@
 Completer for a regular grammar.
 """
 from __future__ import annotations
+                    yield Completion(
+                        text=self.compiled_grammar.escape(varname, new_text),
+                        start_position=start - len(match.string),
+                        display=completion.display,
+                        display_meta=completion.display_meta,
+                    )
 
-from typing import Iterable
+    def _remove_duplicates(self, items: Iterable[Completion]) -> List[Completion]:
+        """
+        Remove duplicates, while keeping the order.
+        (Sometimes we have duplicates, because the there several matches of the
+        same grammar, each yielding similar completions.)
+        """
+        result: List[Completion] = []
+        for i in items:
+            if i not in result:
+                result.append(i)
+        return resultrt Iterable
 
 from prompt_toolkit.completion import CompleteEvent, Completer, Completion
 from prompt_toolkit.document import Document

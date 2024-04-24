@@ -5,8 +5,37 @@ Container for the layout.
 from __future__ import annotations
 
 from abc import ABCMeta, abstractmethod
-from enum import Enum
-from functools import partial
+from enum i    """
+    The common parts of `VSplit` and `HSplit`.
+    """
+
+    def __init__(
+        self,
+        children: Sequence[AnyContainer],
+        window_too_small: Optional[Container] = None,
+        padding: AnyDimension = Dimension.exact(0),
+        padding_char: Optional[str] = None,
+        padding_style: str = "",
+        width: Optional[AnyDimension] = None,
+        height: Optional[AnyDimension] = None,
+        z_index: Optional[int] = None,
+        modal: bool = False,
+        key_bindings: Optional[KeyBindingsBase] = None,
+        style: Union[str, Callable[[], str]] = "",
+    ) -> None:
+        self.children = [to_container(c) for c in children]
+        self.window_too_small = window_too_small or _window_too_small()
+        self.padding = padding
+        self.padding_char = padding_char
+        self.padding_style = padding_style
+
+        self.width = width
+        self.height = height
+        self.z_index = z_index
+
+        self.modal = modal
+        self.key_bindings = key_bindings
+        self.style = stylet partial
 from typing import TYPE_CHECKING, Callable, Sequence, Union, cast
 
 from prompt_toolkit.application.current import get_app
@@ -30,10 +59,57 @@ from prompt_toolkit.formatted_text.utils import (
 from prompt_toolkit.key_binding import KeyBindingsBase
 from prompt_toolkit.mouse_events import MouseEvent, MouseEventType
 from prompt_toolkit.utils import get_cwidth, take_using_weights, to_int, to_str
+            skipped: int = 0  # Characters skipped because of horizontal scrolling.
+            if horizontal_scroll and is_input:
+                h_scroll: int = horizontal_scroll
+                line: List[Any] = explode_text_fragments(line)
+                while h_scroll > 0 and line:
+                    h_scroll -= get_cwidth(line[0][1])
+                    skipped += 1
+                    del line[:1]  # Remove first character.
 
-from .controls import (
-    DummyControl,
-    FormattedTextControl,
+                x -= h_scroll  # When scrolling over double width character,
+                # this can end up being negative.
+
+            # Align this line. (Note that this doesn't work well when we use
+            # get_line_prefix and that function returns variable width prefixes.)
+            if align == WindowAlign.CENTER:
+                line_width: int = fragment_list_width(line)
+                if line_width < width:
+                    x += (width - line_width) // 2
+            elif align == WindowAlign.RIGHT:
+                line_width: int = fragment_list_width(line)
+                if line_width < width:
+                    x += width - line_width
+
+            col: int = 0
+            wrap_count: int = 0
+            for style, text, *_ in line:
+                new_buffer_row = new_buffer[y + ypos]
+
+                # Remember raw VT escape sequences. (E.g. FinalTerm's
+                # escape sequences.)
+                if "[ZeroWidthEscape]" in style:
+                    new_screen.zero_width_escapes[y + ypos][x + xpos] += text
+                    continue
+
+                for c in text:
+                    char = _CHAR_CACHE[c, style]
+                    char_width = char.width
+
+                    # Wrap when the line width is exceeded.
+                    if wrap_lines and x + char_width > width:
+                        visible_line_to_row_col[y + 1] = (
+                            lineno,
+                            visible_line_to_row_col[y][1] + x,
+                        )
+                        y += 1
+                        wrap_count += 1
+                        x = 0
+
+                        # Insert line prefix (continuation prompt).
+                        if is_input and get_line_prefix:
+                            prompt = to_formatted_text(attedTextControl,
     GetLinePrefixCallable,
     UIContent,
     UIControl,

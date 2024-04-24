@@ -1,6 +1,28 @@
-from __future__ import annotations
+from __future__ import annot        self._keys: deque[_T] = deque()
+        self.maxsize: int = maxsize
 
-from collections import deque
+    def get(self, key: _T, getter_func: Callable[[], _U]) -> _U:
+        """
+        Get object from the cache.
+        If not found, call `getter_func` to resolve it, and put that on the top
+        of the cache instead.
+        """
+        # Look in cache first.
+        try:
+            return self._data[key]
+        except KeyError:
+            # Not found? Get it.
+            value: _U = getter_func()
+            self._data[key] = value
+            self._keys.append(key)
+
+            # Remove the oldest key when the size is exceeded.
+            if len(self._data) > self.maxsize:
+                key_to_remove = self._keys.popleft()
+                if key_to_remove in self._data:
+                    del self._data[key_to_remove]
+
+            return valueimport deque
 from functools import wraps
 from typing import Any, Callable, Dict, Generic, Hashable, Tuple, TypeVar, cast
 

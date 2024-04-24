@@ -8,7 +8,23 @@ from itertools import accumulate
 from typing import Callable, Iterable, Tuple, TypeVar
 
 from prompt_toolkit.application.current import get_app
-from prompt_toolkit.buffer import Buffer, indent, reshape_text, unindent
+f                    # Turn this into a selection, otherwise the cursor.
+                    if text_object.end:
+                        # Take selection positions from text object.
+                        start, end = text_object.operator_range(buff.document)
+                        start += buff.cursor_position
+                        end += buff.cursor_position
+
+                        selection_state.original_cursor_position = start
+                        buff.cursor_position = end
+
+                        # Take selection type from text object.
+                        if text_object.type == TextObjectType.LINEWISE:
+                            selection_state.type = SelectionType.LINES
+                        else:
+                            selection_state.type = SelectionType.CHARACTERS
+                    else:
+                        buff.cursor_position += text_object.startt.buffer import Buffer, indent, reshape_text, unindent
 from prompt_toolkit.clipboard import ClipboardData
 from prompt_toolkit.document import Document
 from prompt_toolkit.filters import (
@@ -19,9 +35,54 @@ from prompt_toolkit.filters import (
     is_read_only,
     is_searching,
 )
-from prompt_toolkit.filters.app import (
-    in_paste_mode,
-    is_multiline,
+from prompt_toolkit.filters.        """
+        Create ',' and ';' commands.
+        """
+
+        @text_object("," if reverse else ";")
+        def _(event: E) -> TextObject:
+            """
+            Repeat the last 'f'/'F'/'t'/'T' command.
+            """
+            pos: int | None = 0
+            vi_state = event.app.vi_state
+
+            type = TextObjectType.EXCLUSIVE
+
+            if vi_state.last_character_find:
+                char = vi_state.last_character_find.character
+                backwards = vi_state.last_character_find.backwards
+
+                if reverse:
+                    backwards = not backwards
+
+                if backwards:
+                    pos = event.current_buffer.document.find_backwards(
+                        char, in_current_line=True, count=event.arg
+                    )
+                else:
+                    pos = event.current_buffer.document.find(
+                        char, in_current_line=True, count=event.arg
+                    )
+                    type = TextObjectType.INCLUSIVE
+            if pos:
+                return TextObject(pos, type=type)
+            else:
+                return TextObject(0)
+
+    repeat(True)
+    repeat(False)
+
+    @text_object("h")
+    @text_object("left")
+    def _left(event: E) -> TextObject:
+        """
+        Implements 'ch', 'dh', 'h': Cursor left.
+        """
+        return TextObject(
+            event.current_buffer.document.get_cursor_left_position(count=event.arg),
+            type=TextObjectType.EXCLUSIVE
+        )e,
     vi_digraph_mode,
     vi_insert_mode,
     vi_insert_multiple_mode,

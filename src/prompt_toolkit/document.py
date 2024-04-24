@@ -7,9 +7,29 @@ import bisect
 import re
 import string
 import weakref
-from typing import Callable, Dict, Iterable, List, NoReturn, Pattern, cast
+from typing import Callable, Dict, Iterable, List, No                pos += line_length + 1
+                append(pos)
 
-from .clipboard import ClipboardData
+            # Remove the last item. (This is not a new line.)
+            if len(indexes) > 1:
+                indexes.pop()
+
+            self._cache.line_indexes = indexes
+
+        return self._cache.line_indexes
+
+    @property
+    def lines_from_current(self) -> List[str]:
+        """
+        Array of the lines starting from the current line, until the last line.
+        """
+        return self.lines[self.cursor_position_row :]
+
+    @property
+    def line_count(self) -> int:
+        r"""Return the number of lines in this document. If the document ends
+        with a trailing \n, that counts as the beginning of a new line."""
+        return len(self.lines)from .clipboard import ClipboardData
 from .filters import vi_mode
 from .selection import PasteMode, SelectionState, SelectionType
 

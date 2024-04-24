@@ -33,7 +33,54 @@ from typing import (
     overload,
 )
 
-from prompt_toolkit.buffer import Buffer
+from pro                while True:
+                    await sleep(refresh_interval)
+                    self.invalidate()
+
+             # (`self.future` needs to be set when `pre_run` is called.)
+            self.reset()
+            self._pre_run(pre_run)
+
+            # Feed type ahead input first.
+            self.key_processor.feed_multiple(get_typeahead(self.input))
+            self.key_processor.process_keys()
+
+            def read_from_input() -> None:
+                nonlocal flush_task
+
+                # Ignore when we aren't running anymore. This callback will
+                # removed from the loop next time. (It could be that it was
+                # still in the 'tasks' list of the loop.)
+                # Except: if we need to process incoming CPRs.
+                if not self._is_running and not self.renderer.waiting_for_cpr:
+                    return
+
+                # Get keys from the input object.
+                keys = self.input.read_keys()
+
+                # Feed to key processor.
+                self.key_processor.feed_multiple(keys)background_task(auto_refresh(self.refresh_interval))
+
+    def _update_invalidate_events(self) -> None:
+        """
+        Make sure to attach 'invalidate' handlers to all invalidate events in
+        the UI.
+        """
+        # Remove all the original event handlers. (Components can be removed
+        # from the UI.)
+        for ev in self._invalidate_events:
+            ev -= self._invalidate_handler
+
+        # Gather all new events.
+        # (All controls are able to invalidate themselves.)
+        def gather_events() -> Iterable[Event[object]]:
+            for c in self.layout.find_all_controls():
+                yield from c.get_invalidate_events()
+
+        self._invalidate_events = list(gather_events())
+
+        for ev in self._invalidate_events:
+            ev += self._invalidate_handlerBuffer
 from prompt_toolkit.cache import SimpleCache
 from prompt_toolkit.clipboard import Clipboard, InMemoryClipboard
 from prompt_toolkit.cursor_shapes import AnyCursorShapeConfig, to_cursor_shape_config
