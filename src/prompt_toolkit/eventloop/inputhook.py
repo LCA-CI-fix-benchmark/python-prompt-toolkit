@@ -2,7 +2,31 @@
 Similar to `PyOS_InputHook` of the Python API, we can plug in an input hook in
 the asyncio event loop.
 
-The way this works is by using a custom 'selector' that runs the other event
+The way this works is by using         th.start()
+
+        def input_is_ready() -> bool:
+            return ready
+
+        # Call inputhook.
+        # The inputhook function is supposed to return when our selector
+        # becomes ready. The inputhook can do that by registering the fd in its
+        # own loop, or by checking the `input_is_ready` function regularly.
+        self.inputhook(InputHookContext(self._r, input_is_ready))
+
+        # Flush the read end of the pipe.
+        try:
+            # Before calling 'os.read', call select.select. This is required
+            # when the gevent monkey patch has been applied. 'os.read' is never
+            # monkey patched and won't be cooperative, so that would block all
+            # other select() calls otherwise.
+            # See: http://www.gevent.org/gevent.os.html
+
+            # Note: On Windows, this is apparently not an issue.
+            #       However, if we would ever want to add a select call, it
+            #       should use `windll.kernel32.WaitForMultipleObjects`,
+        except Exception as e:
+            # Handle any exceptions that might occur during the try block.
+            print(f"An error occurred: {e}")at runs the other event
 loop until the real selector is ready.
 
 It's the responsibility of this event hook to return when there is input ready.

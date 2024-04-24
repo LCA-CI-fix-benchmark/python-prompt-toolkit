@@ -30,26 +30,92 @@ from typing import (
     Iterator,
     TypeVar,
     cast,
-    overload,
-)
+    ov        # NOTE: We want to make sure this Application is the active one. The
+        #       invalidate function is often called from a context where this
+        #       application is not the active one. (Like the
+        #       `PromptSession._auto_refresh_context`).
+        #       We copy the context in case the context was already active, to
+        #       prevent RuntimeErrors. (The rendering is not supposed to change
+        #       any context variables.)
+        if self.context is not None:
+            self.context.copy().run(run_in_context)
 
-from prompt_toolkit.buffer import Buffer
-from prompt_toolkit.cache import SimpleCache
-from prompt_toolkit.clipboard import Clipboard, InMemoryClipboard
-from prompt_toolkit.cursor_shapes import AnyCursorShapeConfig, to_cursor_shape_config
-from prompt_toolkit.data_structures import Size
-from prompt_toolkit.enums import EditingMode
-from prompt_toolkit.eventloop import (
-    InputHook,
-    get_traceback_from_context,
-    new_eventloop_with_inputhook,
-    run_in_executor_with_context,
-)
-from prompt_toolkit.eventloop.utils import call_soon_threadsafe
-from prompt_toolkit.filters import Condition, Filter, FilterOrBool, to_filter
-from prompt_toolkit.formatted_text import AnyFormattedText
-from prompt_toolkit.input.base import Input
-from prompt_toolkit.input.typeahead import get_typeahead, store_typeahead
+    def _start_auto_refresh_task(self) -> None:
+        """
+        Start a while/true loop in the background for automatic invalidation of
+        the UI.
+        """
+        if self.refresh_interval is not None and self.refresh_interval != 0:
+
+            async def auto_refresh(refresh_interval: float) -> None:
+                while True:
+                    await sleep(refresh_interval)
+                    self.invalidate()
+
+            self.create_background_task(auto_refresh(self.refresh_interval))
+
+    def _update_invalidate_events(self) -> None:
+        """
+        Make sure to attach 'invalidate' handlers to all invalidate events in
+        the UI.
+        """
+        # Remove all the original event handlers. (Components can be removed
+        # from the UI.)
+        for ev in self._invalidate_events:
+            ev -= self._invalidate_handler
+
+        # Gather all new events.
+        # (All controls are able to invalidate themselves.)
+        def gather_events() -> Iterable[Event[object]]:
+            for c in self.layout.find_all_controls():
+                yield from c.get_invalidate_events()
+
+        self._invalidate_events = list(gather_events())
+
+        for ev in self._invalidate_events:
+            ev += self._invalidate_handler
+
+    def _invalidate_handler(self, sender: object) -> None:
+        """
+        Handler for invalidate events coming from UIControls.
+
+        (This handles the difference in signature between event handler and
+        `self.invalidate`. It also needs to be a method -not a nested
+        function-, so that we can remove it again .)
+        """
+        self.invalidate()
+
+    def _on_resize(self) -> None:
+        """
+        When the window size changes, we erase the current output and request
+        again the cursor position. When the CPR answer arrives, the output is
+        drawn again.
+        """
+        # Erase, request position (when cursor is at the start position)
+        # and redraw again. -- The order is important.
+        self.renderer.erase(leave_alternate_screen=False)
+        self._request_absolute_cursor_position()
+        self._redraw()
+
+    def _pre_run(self, pre_run: Callable[[], None] | None = None) -> None:
+        """
+        Called during `run`.
+
+        `self.future` should be set to the new future at the point where this
+        is called in order to avoid data races. `pre_run` can be used to set a
+        `threading.Event` to synchronize with UI termination code, running in
+        another thread that would call `Application.exit`. (See the progress
+        bar code for an example.)
+        """
+        if pre_run:
+            pre_run()
+
+        # Process registered "pre_run_callables" and clear list.
+        for c in self.pre_run_callables:
+            c()
+        del self.pre_run_callables[:]
+
+    # Other functions and methods omitted for brevity...eahead import get_typeahead, store_typeahead
 from prompt_toolkit.key_binding.bindings.page_navigation import (
     load_page_navigation_bindings,
 )
