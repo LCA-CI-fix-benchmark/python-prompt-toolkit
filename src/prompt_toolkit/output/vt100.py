@@ -13,8 +13,23 @@ import os
 import sys
 from typing import Callable, Dict, Hashable, Iterable, Sequence, TextIO, Tuple
 
-from prompt_toolkit.cursor_shapes import CursorShape
-from prompt_toolkit.data_structures import Size
+from prompt_toolkit.cursor_shapes impo    # Method to create an Output class from a pseudo terminal
+    def from_pty(
+        cls,
+        stdout: TextIO,
+        term: str | None = None,
+        default_color_depth: ColorDepth | None = None,
+        enable_bell: bool = True,
+    ) -> Vt100_Output:
+        """
+        Create an Output class from a pseudo terminal.
+        (This will take the dimensions by reading the pseudo
+        terminal attributes.)
+        """
+        # Normally, this requires a real TTY device, but people instantiate
+        # this class often during unit tests as well. For convenience, we print
+        # an error message, use standard dimensions, and go on.
+        try:om prompt_toolkit.data_structures import Size
 from prompt_toolkit.output import Output
 from prompt_toolkit.styles import ANSI_COLOR_NAMES, Attrs
 from prompt_toolkit.utils import is_dumb_terminal

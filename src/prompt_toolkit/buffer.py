@@ -17,9 +17,51 @@ from enum import Enum
 from functools import wraps
 from typing import Any, Awaitable, Callable, Coroutine, Iterable, TypeVar, cast
 
-from .application.current import get_app
-from .application.run_in_terminal import run_in_terminal
-from .auto_suggest import AutoSuggest, Suggestion
+fro                """
+                Handle `load_history` result when either done, cancelled, or
+                when an exception was raised.
+                """
+                try:
+                    f.result()
+                except asyncio.CancelledError:
+                    # Ignore cancellation. But handle it, so that we don't get
+                    # this traceback.
+                    pass
+                except GeneratorExit:
+                    # Probably not needed, but we had situations where
+                    # `GeneratorExit` was raised in `load_history` during
+                    # cancellation.
+                    pass
+                except BaseException:
+                    # Log error if something goes wrong. (We don't have a specific
+                    # handling for different exceptions at this point.)
+                    passrrent import get_app
+from .application.run_in_terminal import         enabled.
+        """
+        while True:
+            # Check if the validation state is already known to avoid redundant calls.
+            if self.validation_state != ValidationState.UNKNOWN:
+                return
+
+            # Call the validator and handle validation results.
+            error = None
+            document = self.document
+
+            if self.validator:
+                try:
+                    await self.validator.validate_async(self.document)
+                except ValidationError as e:
+                    error = e
+
+                # Re-validate if the document changed during validation.
+                if self.document != document:
+                    continue
+
+            # Update the validation state based on the presence of error.
+            if error:
+                self.validation_state = ValidationState.INVALID
+            else:
+                self.validation_state = ValidationState.VALIDsuggest import AutoSuggest, Suggestion
 from .cache import FastDictCache
 from .clipboard import ClipboardData
 from .completion import (

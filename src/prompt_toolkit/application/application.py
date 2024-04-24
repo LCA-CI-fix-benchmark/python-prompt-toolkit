@@ -47,7 +47,11 @@ from prompt_toolkit.eventloop import (
 )
 from prompt_toolkit.eventloop.utils import call_soon_threadsafe
 from prompt_toolkit.filters import Condition, Filter, FilterOrBool, to_filter
-from prompt_toolkit.formatted_text import AnyFormattedText
+from prompt_toolkit.formatt        # Check if there are any background tasks to wait for.
+        if self._background_tasks:
+            await asyncio.wait(
+                self._background_tasks, timeout=None, return_when=asyncio.FIRST_COMPLETED
+            )xt import AnyFormattedText
 from prompt_toolkit.input.base import Input
 from prompt_toolkit.input.typeahead import get_typeahead, store_typeahead
 from prompt_toolkit.key_binding.bindings.page_navigation import (

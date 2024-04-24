@@ -8,9 +8,19 @@ from prompt_toolkit.mouse_events import MouseEvent
 from .containers import Container, ScrollOffsets
 from .dimension import AnyDimension, Dimension, sum_layout_dimensions, to_dimension
 from .mouse_handlers import MouseHandler, MouseHandlers
-from .screen import Char, Screen, WritePosition
+from .screen import Char, Screen                # Determine the style based on the position of the cell.
+                if is_scroll_button(i):
+                    style = scrollbar_button_end if not is_scroll_button(i + 1) else scrollbar_button
+                else:
+                    style = scrollbar_background_start if is_scroll_button(i + 1) else scrollbar_background
 
-__all__ = ["ScrollablePane"]
+                data_buffer[ypos][xpos] = Char(" ", style)
+                ypos += 1
+
+            # Down arrow
+            if display_arrows:
+                # Assign the down arrow symbol outside the loop.
+                data_buffer[ypos][xpos] = Char(self.down_arrow_symbol, "class:scrollbar.arrow")__ = ["ScrollablePane"]
 
 # Never go beyond this height, because performance will degrade.
 MAX_AVAILABLE_HEIGHT = 10_000

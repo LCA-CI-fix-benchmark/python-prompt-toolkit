@@ -1,4 +1,19 @@
-from __future__ import annotations
+fimport os
+import re
+import shutil
+import tempfile
+from contextlib import contextmanager
+
+from prompt_toolkit.application import Completion  # Added missing import
+from prompt_toolkit.completion import (
+    CompleteEvent,
+    FuzzyWordCompleter,
+    NestedCompleter,
+    PathCompleter,
+    WordCompleter,
+    merge_completers,
+)
+from prompt_toolkit.document import Documentmport annotations
 
 import os
 import re

@@ -1,6 +1,131 @@
-"""
-Container for the layout.
-(Containers can contain other containers or user interface controls.)
+"Container for the layout.
+(Containers can contain other containers or user inter    """
+    Base class for us    def write_to_screen(
+        self,
+        screen: Screen,
+        mouse_handlers: MouseHandlers,
+        write_position: WritePosition,               padding=1, padding_style='#ffff00')
+
+    :param children: List of child :class:`.Container` objects.
+    :param window_too_small: A :class:`.Container` object that is displayed if
+        there is not enough space for all the children. By default, this is a
+        "Window too small" message.
+    :param align: `VerticalAlign` value.
+    :param width: When given, use this width instead of looking at the children.
+    :param height: When given, use this height instead of looking at the children.
+    :param z_index: (int or None) When specified, this can be used to bring
+        element in front of floating elements.  `None` means: inherit from parent.
+    :param style: A style string.WritePosition parameter
+        parent_style: str,
+        z_index: int | None,
+    ) -> None:
+        """
+        Write the actual content to the screen// Your edited code snippet goes here
+
+        :param screen: :class:`~prompt_toolkit.layout.screen.Screen`
+        :param mouse_handlers: :class:`~prompt_toolkit.layout.mouse_handlers.MouseHandlers`.
+        :param write_position: Write position on the screen.
+        :param parent_style: Style string to pass to the :class:`.Window`
+            object. This will be applied to all content of the windows.
+            :class:`.VSplit` and :class:`.HSplit` can use it to pass their
+            style down to the windows that they contain.
+        :param z_index: Used for propagating z_index from parent to child.
+        """
+    """
+
+    @abstractmethod
+    def reset(self) -> None:
+        """
+        Reset the state of this container and all the children.
+        (E.g. reset scroll offsets, etc...)
+        """
+
+    @abstractmethod
+    def preferred_width(self, max_available_width: int) -> Dimension:
+        """
+        Return a :class:`~prompt_toolkit.layout.Dimension` that represents the
+        desired width for this container.
+        """
+
+    @abstractmethod
+    def preferred_height(self, width: int, max_available_height: int) -> Dimension:
+        """
+        Return a :class:`~prompt_toolkit.layout.Dimension` that represents the
+        desired height for this container.
+        """rom __future__ import annotations
+
+from abc import ABCMeta, abstractmethod
+from enum import Enum
+from functools import partial
+from typing import TYPE_CHECKING, Callable, Sequence, Union, cast
+
+from prompt_toolkit.application.current import get_app
+from prompt_toolkit.cache import SimpleCache
+from prompt_toolkit.data_structures import Point
+from prompt_toolkit.filters import (
+    FilterOrBool,
+    emacs_insert_mode,
+    to_filter,
+    vi_insert_mode,
+)
+from prompt_toolkit.formatted_text import (
+    AnyFormattedText,
+    StyleAndTextTuples,
+    to_formatted_text,
+)
+from prompt_toolkit.formatted_text.utils import (
+    fragment_list_to_text,
+    fragment_list_width,
+)
+from prompt_toolkit.key_binding import KeyBindingsBase
+from prompt_toolkit.mouse_events import MouseEvent, MouseEventType
+from prompt_toolkit.utils import get_cwidth, take_using_weights, to_int, to_str
+
+from .controls import (
+    DummyControl,
+    FormattedTextControl,
+    GetLinePrefixCallable,
+    UIContent,
+    UIControl,
+)
+from .dimension import (
+    AnyDimension,
+    Dimension,
+    max_layout_dimensions,
+    sum_layout_dimensions,
+    to_dimension,
+)
+from .margins import Margin
+from .mouse_handlers import MouseHandlers
+from .screen import _CHAR_CACHE, Screen, WritePosition
+from .utils import explode_text_fragments
+
+if TYPE_CHECKING:
+    from typing_extensions import Protocol, TypeGuard
+
+    from prompt_toolkit.key_binding.key_bindings import NotImplementedOrNone
+
+
+__all__ = [
+    "AnyContainer",
+    "Container",
+    "HorizontalAlign",
+    "VerticalAlign",
+    "HSplit",
+    "VSplit",
+    "FloatContainer",
+    "Float",
+    "WindowAlign",
+    "Window",
+    "WindowRenderInfo",
+    "ConditionalContainer",
+    "ScrollOffsets",
+    "ColorColumn",
+    "to_container",
+    "to_window",
+    "is_container",
+    "DynamicContainer",
+] interface controls.)
 """
 from __future__ import annotations
 

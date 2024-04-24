@@ -6,7 +6,10 @@ from abc import ABCMeta, abstractmethod
 from typing import AsyncGenerator, Callable, Iterable, Sequence
 
 from prompt_toolkit.document import Document
-from prompt_toolkit.eventloop import aclosing, generator_to_async_generator
+from prompt_toolkit.eventloop import aclo        # Commented out code below for several reasons:
+        # - To prevent it from being executed.
+        # - To temporarily disable functionality.
+        # - To keep it as a reference without affecting the current behavior.ing, generator_to_async_generator
 from prompt_toolkit.filters import FilterOrBool, to_filter
 from prompt_toolkit.formatted_text import AnyFormattedText, StyleAndTextTuples
 

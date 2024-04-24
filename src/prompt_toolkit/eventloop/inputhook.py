@@ -1,6 +1,54 @@
 """
-Similar to `PyOS_InputHook` of the Python API, we can plug in an input hook in
-the asyncio event loop.
+Similar to `PyOS_InputHook` of the Python APIfrom typing import TypeAlias  # Add missing import for T    def unregister(self, fileobj: FileDescriptorLike) -> None:
+        ret    def close(self) -> None:
+        # Close the selector.
+        self.selector.close()
+
+    def get_map(self) -> Mapping[FileDescriptorLike, SelectorKey]:
+        # Get the mapping of file descriptors to selector keys.
+        return self.selector.get_map()elf.selector.unregister(fileobj)
+
+    def modify(
+        self, fileobj: FileDescriptorLike, events: _EventMask, data: Any = None
+    ) -> SelectorKey:
+        return self.selector.modify(fileobj, events, data=data)  # Fix parameter assignment
+
+    # Select method to handle event selection
+    def select(
+        self, timeout: float | None = None
+    ) -> list[tuple[SelectorKey, _EventMask]]:
+        # If there are tasks in the current event loop,
+        # don't run the input hook.
+        if len(getattr(get_running_loop(), "_ready", [])) > 0:
+            return self.selector.select(timeout=timeout)
+
+        ready = False
+        result = NoneputHookContext:
+    """
+    Given as a parameter to the inputhook.
+    """
+
+    def __init__(self, fileno: int, input_is_ready: Callable[[], bool]) -> None:
+        self._fileno = fileno
+        self.input_is_ready = input_is_ready
+
+    def fileno(self) -> int:
+        return self._fileno
+
+
+InputHook: TypeAlias = Callable[[InputHookContext], None]
+
+def new_eventloop_with_inputhook(
+    inputhook: Callable[[InputHookContext], None]
+) -> AbstractEventLoop:
+    """
+    Create a new event loop with the given inputhook.
+    """
+    selector = InputHookSelector(selectors.DefaultSelector(), inputhook)
+    loop = asyncio.SelectorEventLoop(selector)
+    return loop
+
+# Removed incomplete and deprecated function set_eventloop_with_inputhook()e asyncio event loop.
 
 The way this works is by using a custom 'selector' that runs the other event
 loop until the real selector is ready.
