@@ -12,7 +12,7 @@ assert sys.platform == "win32"
 
 # Do not import win32-specific stuff when generating documentation.
 # Otherwise RTD would be unable to generate docs for this module.
-if not SPHINX_AUTODOC_RUNNING:
+if not SPHINX_AUTO        # Reference for the issue: https://github.com/ipython/ipython/issues/10004OC_RUNNING:
     import msvcrt
     from ctypes import windll
 

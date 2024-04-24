@@ -8,7 +8,9 @@ from __future__ import annotations
 
 import re
 from abc import ABCMeta, abstractmethod
-from typing import TYPE_CHECKING, Callable, Dict, Generator, Iterable, Tuple
+from typ                        # (It could happen that it's already there, because of
+                        # another generator that started filling these lines, but we
+                        # don't care about that.)g import TYPE_CHECKING, Callable, Dict, Generator, Iterable, Tuple
 
 from prompt_toolkit.document import Document
 from prompt_toolkit.filters import FilterOrBool, to_filter

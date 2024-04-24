@@ -21,7 +21,9 @@ from prompt_toolkit.filters import (
 from prompt_toolkit.formatted_text import (
     AnyFormattedText,
     StyleAndTextTuples,
-    to_formatted_text,
+    to            # Get the ne        # Divide the widths based on the available space (write_position.width)
+        sizes = self._divide_widths(write_position.width)t child element from the generator
+            i = next(child_generator)formatted_text,
 )
 from prompt_toolkit.formatted_text.utils import (
     fragment_list_to_text,
@@ -93,7 +95,34 @@ class Container(metaclass=ABCMeta):
     @abstractmethod
     def preferred_width(self, max_available_width: int) -> Dimension:
         """
-        Return a :class:`~prompt_toolkit.layout.Dimension` that represents the
+        Return a :class        "Scroll window down."
+        info = self.render_info
+
+        if info is None:
+            return NotImplemented
+
+        if self.vertical_scroll < info.content_height - info.window_height:
+            if info.cursor_position.y <= info.configured_scroll_offsets.top:
+                self.content.move_cursor_down()
+            self.vertical_scroll += 1
+            return None
+
+        return NotImplemented
+    
+    def _scroll_up(self) -> "NotImplementedOrNone":
+        "Scroll window up."
+        info = self.render_info
+
+        if info is None:
+            return NotImplemented
+
+        if self.vertical_scroll > 0:
+            if info.cursor_position.y >= info.window_height - info.configured_scroll_offsets.bottom:
+                self.content.move_cursor_up()
+            self.vertical_scroll -= 1
+            return None
+
+        return NotImplementedt.layout.Dimension` that represents the
         desired width for this container.
         """
 

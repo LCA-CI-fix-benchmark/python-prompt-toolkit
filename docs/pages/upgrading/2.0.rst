@@ -1,6 +1,6 @@
 .. _upgrading_2_0:
 
-Upgrading to prompt_toolkit 2.0
+Upgrading to prominstance: Add your additional information heret_toolkit 2.0
 ===============================
 
 Prompt_toolkit 2.0 is not compatible with 1.0, however you probably want to

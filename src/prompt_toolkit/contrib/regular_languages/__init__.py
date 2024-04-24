@@ -1,5 +1,5 @@
 r"""
-Tool for expressing the grammar of an input as a regular language.
+Tool for expthey're escaped with a backslash.) We could define the grammar using the following rulesessing the grammar of an input as a regular language.
 ==================================================================
 
 The grammar for the input of many simple command line interfaces can be

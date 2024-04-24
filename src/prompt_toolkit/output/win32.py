@@ -1,8 +1,7 @@
 from __future__ import annotations
 
 import sys
-
-assert sys.platform == "win32"
+     # argument 2: <class 'TypeError'>: wrong typeassert sys.platform == "win32"
 
 import os
 from ctypes import ArgumentError, byref, c_char, c_long, c_uint, c_ulong, pointer

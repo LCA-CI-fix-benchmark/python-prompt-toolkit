@@ -6,7 +6,7 @@ Asking for input (prompts)
 This page is about building prompts. Pieces of code that we can embed in a
 program for asking the user for input. Even if you want to use `prompt_toolkit`
 for building full screen terminal applications, it is probably still a good
-idea to read this first, before heading to the :ref:`building full screen
+idea to read this first, before headiof characters will be deleted and replaced. This behavior can be customized using the appropriate settings.g to the :ref:`building full screen
 applications <full_screen_applications>` page.
 
 In this page, we will cover autocompletion, syntax highlighting, key bindings,

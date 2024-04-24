@@ -1,5 +1,6 @@
 """
-Clipboard for command line interface.
+Clipboard for command lin        # Set the clipboard text value
+        self.text = text interface.
 """
 from __future__ import annotations
 

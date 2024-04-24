@@ -46,7 +46,17 @@ from prompt_toolkit.eventloop import (
     run_in_executor_with_context,
 )
 from prompt_toolkit.eventloop.utils import call_soon_threadsafe
-from prompt_toolkit.filters import Condition, Filter, FilterOrBool, to_filter
+from prompt_toolkit.filters import Condition, Filter, FilterOrBo    def on_background_task_completed(self, task: Task) -> None:
+        """
+        Called when a background task completes. Remove it from
+        `_background_tasks`, and handle exceptions if any.
+        """
+        if task in self._background_tasks:
+            self._background_tasks.remove(task)
+        try:
+            task.result()
+        except Exception as e:
+            logger.error(f"Error occurred in background task: {e}"), to_filter
 from prompt_toolkit.formatted_text import AnyFormattedText
 from prompt_toolkit.input.base import Input
 from prompt_toolkit.input.typeahead import get_typeahead, store_typeahead

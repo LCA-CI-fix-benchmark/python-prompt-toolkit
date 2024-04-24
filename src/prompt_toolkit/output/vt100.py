@@ -2,7 +2,8 @@
 Output for vt100 terminals.
 
 A lot of thanks, regarding outputting of colors, goes to the Pygments project:
-(We don't rely on Pygments anymore, because many things are very custom, and
+(We don't rely on Pygments anymore, because many things are very c        else:
+            # Add your code or condition herestom, and
 everything has been highly optimized.)
 http://pygments.org/
 """

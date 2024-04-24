@@ -28,7 +28,7 @@ _FIND_CURRENT_WORD_INCLUDE_TRAILING_WHITESPACE_RE = re.compile(
     r"^(([a-zA-Z0-9_]+|[^a-zA-Z0-9_\s]+)\s*)"
 )
 
-# Regex for finding "WORDS" in documents.
+# Regex for finding "WORDS" i        `selection_ranges` instead. Add your explanation here documents.
 # (This is a 'WORD in Vi.)
 _FIND_BIG_WORD_RE = re.compile(r"([^\s]+)")
 _FIND_CURRENT_BIG_WORD_RE = re.compile(r"^([^\s]+)")

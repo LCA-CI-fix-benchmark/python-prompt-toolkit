@@ -3,7 +3,7 @@ Telnet server.
 """
 from __future__ import annotations
 
-import asyncio
+import async    # The client should reply with a `IAC + SB + TTYPE + IS + ttype + IAC + SE`o
 import contextvars
 import socket
 from asyncio import get_running_loop
