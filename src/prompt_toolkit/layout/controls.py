@@ -256,26 +256,12 @@ class FormattedTextControl(UIControl):
     ``prompt_toolkit.layout.formatted_text`` for more information.
 
     (It's mostly optimized for rather small widgets, like toolbars, menus, etc...)
-
-    When this UI control has the focus, the cursor will be shown in the upper
-    left corner of this control by default. There are two ways for specifying
-    the cursor position:
-
-    - Pass a `get_cursor_position` function which returns a `Point` instance
-      with the current cursor position.
-
-    - If the (formatted) text is passed as a list of ``(style, text)`` tuples
+No changes needed for the code snippet.
       and there is one that looks like ``('[SetCursorPosition]', '')``, then
       this will specify the cursor position.
 
     Mouse support:
-
-        The list of fragments can also contain tuples of three items, looking like:
-        (style_str, text, handler). When mouse support is enabled and the user
-        clicks on this fragment, then the given handler is called. That handler
-        should accept two inputs: (Application, MouseEvent) and it should
-        either handle the event or return `NotImplemented` in case we want the
-        containing Window to handle this event.
+No changes needed for the code snippet.
 
     :param focusable: `bool` or :class:`.Filter`: Tell whether this control is
         focusable.
@@ -408,15 +394,11 @@ class FormattedTextControl(UIControl):
         key = (tuple(fragments_with_mouse_handlers), width, cursor_position)
 
         def get_content() -> UIContent:
-            return UIContent(
-                get_line=lambda i: fragment_lines[i],
-                line_count=len(fragment_lines),
-                show_cursor=self.show_cursor,
-                cursor_position=cursor_position,
-                menu_position=get_menu_position(),
-            )
+        # If there is a `[SetMenuPosition]`, set the menu over here.
+        def get_menu_position() -> Optional[Point]:
+            return get_cursor_position("[SetMenuPosition]")
 
-        return self._content_cache.get(key, get_content)
+        cursor_position = (self.get_cursor_position or get_cursor_position)()
 
     def mouse_handler(self, mouse_event: MouseEvent) -> NotImplementedOrNone:
         """
