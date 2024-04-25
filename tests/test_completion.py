@@ -35,8 +35,6 @@ def write_test_files(test_dir, names=None):
     for i in names:
         with open(os.path.join(test_dir, str(i)), "wb") as out:
             out.write(b"")
-
-
 def test_pathcompleter_completes_in_current_directory():
     completer = PathCompleter()
     doc_text = ""
@@ -67,10 +65,14 @@ def test_pathcompleter_completes_files_in_current_directory():
         assert expected == result
 
     # cleanup
+    # cleanup
     shutil.rmtree(test_dir)
 
 
-def test_pathcompleter_completes_files_in_absolute_directory():
+def test_path_completer_completes_files_in_absolute_directory():
+    """
+    Test that the PathCompleter completes files in an absolute directory.
+    """
     # setup: create a test dir with 10 files
     test_dir = tempfile.mkdtemp()
     write_test_files(test_dir)
@@ -80,8 +82,6 @@ def test_pathcompleter_completes_files_in_absolute_directory():
     test_dir = os.path.abspath(test_dir)
     if not test_dir.endswith(os.path.sep):
         test_dir += os.path.sep
-
-    completer = PathCompleter()
     # force unicode
     doc_text = str(test_dir)
     doc = Document(doc_text, len(doc_text))
@@ -127,7 +127,10 @@ def test_pathcompleter_completes_directories_with_only_directories():
     shutil.rmtree(test_dir)
 
 
-def test_pathcompleter_respects_completions_under_min_input_len():
+def test_path_completer_respects_completions_under_min_input_len():
+    """
+    Test that the PathCompleter respects completions under the minimum input length.
+    """
     # setup: create a test dir with 10 files
     test_dir = tempfile.mkdtemp()
     write_test_files(test_dir)
@@ -162,11 +165,10 @@ def test_pathcompleter_respects_completions_under_min_input_len():
         assert [""] == result
 
     # create 10 files with a 2 char long name
-    for i in range(10):
-        with open(os.path.join(test_dir, str(i) * 2), "wb") as out:
-            out.write(b"")
-
     # min len:1 and text of len 1
+    with chdir(test_dir):
+        completer = PathCompleter(min_input_len=1)
+        doc_text = "2"
     with chdir(test_dir):
         completer = PathCompleter(min_input_len=1)
         doc_text = "2"
@@ -228,9 +230,6 @@ def test_pathcompleter_can_apply_file_filter():
         assert ["my.csv"] == result
 
     # cleanup
-    shutil.rmtree(test_dir)
-
-
 def test_pathcompleter_get_paths_constrains_path():
     # setup: create a test dir with 10 files
     test_dir = tempfile.mkdtemp()
@@ -244,6 +243,8 @@ def test_pathcompleter_get_paths_constrains_path():
     get_paths = lambda: ["subdir"]
 
     with chdir(test_dir):
+        completer = PathCompleter(get_paths=get_paths)
+        doc_text = ""
         completer = PathCompleter(get_paths=get_paths)
         doc_text = ""
         doc = Document(doc_text, len(doc_text))
