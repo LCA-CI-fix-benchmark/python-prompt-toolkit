@@ -604,15 +604,13 @@ class Application(Generic[_AppResult]):
         Called during `run`.
 
         `self.future` should be set to the new future at the point where this
-        is called in order to avoid data races. `pre_run` can be used to set a
-        `threading.Event` to synchronize with UI termination code, running in
-        another thread that would call `Application.exit`. (See the progress
-        bar code for an example.)
-        """
         if pre_run:
             pre_run()
 
-        # Process registered "pre_run_callables" and clear list.
+        for callback in self.pre_run_callables:
+            callback()
+
+        self.pre_run_callables.clear()
         for c in self.pre_run_callables:
             c()
         del self.pre_run_callables[:]
