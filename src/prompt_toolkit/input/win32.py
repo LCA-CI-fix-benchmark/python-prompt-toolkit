@@ -620,7 +620,6 @@ class _Win32Handles:
                 loop.call_soon_threadsafe(ready)
 
         run_in_executor_with_context(wait, loop=loop)
-
     def remove_win32_handle(self, handle: HANDLE) -> Callable[[], None] | None:
         """
         Remove a Win32 handle from the event loop.

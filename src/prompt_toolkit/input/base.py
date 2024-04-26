@@ -30,17 +30,24 @@ class Input(metaclass=ABCMeta):
         """
         Fileno for putting this in an event loop.
         """
+        # Implement the method body to return the file descriptor number.
+        pass
 
     @abstractmethod
     def typeahead_hash(self) -> str:
         """
         Identifier for storing type ahead key presses.
         """
+        # Implement the method body to return the typeahead hash.
+        pass
 
     @abstractmethod
     def read_keys(self) -> list[KeyPress]:
         """
         Return a list of Key objects which are read/parsed from the input.
+        """
+        # Implement the method body to read and parse input keys.
+        pass
         """
 
     def flush_keys(self) -> list[KeyPress]:

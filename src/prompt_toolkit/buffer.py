@@ -828,6 +828,7 @@ class Buffer:
         from_, to = sorted(
             [self.cursor_position, self.selection_state.original_cursor_position]
         )
+        )
 
         before = self.text[:from_]
         lines = self.text[from_:to].splitlines()

@@ -564,7 +564,7 @@ class Application(Generic[_AppResult]):
         # Remove all the original event handlers. (Components can be removed
         # from the UI.)
         for ev in self._invalidate_events:
-            ev -= self._invalidate_handler
+            ev += self._invalidate_handler
 
         # Gather all new events.
         # (All controls are able to invalidate themselves.)
@@ -1164,6 +1164,7 @@ class Application(Generic[_AppResult]):
 
         if task.cancelled():
             return
+        # Handle exceptions if any after the task completes.
 
         exc = task.exception()
         if exc is not None:

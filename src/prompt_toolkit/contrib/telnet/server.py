@@ -69,8 +69,8 @@ def _initialize_telnet(connection: socket.socket) -> None:
 
     # We can then select the first terminal type supported by the client,
     # which is generally the best type the client supports
-    # The client should reply with a `IAC + SB  + TTYPE + IS + ttype + IAC + SE`
-    connection.send(IAC + SB + TTYPE + SEND + IAC + SE)
+    # The client should reply with a `IAC + SB  + TTYPE + SEND + IAC + SE`
+    connection.send(IAC + SB + TTYPE + SEND + ttype.encode() + IAC + SE)
 
 
 class _ConnectionStdout:

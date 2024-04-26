@@ -28,7 +28,8 @@ can accept the input, you could create a key binding for any key to accept the
 input.
 
 To support type ahead, this module will store all the key strokes that were
-read too early, so that they can be feed into to the next `prompt()` call or to
+"""
+read too early, so that they can be fed into the next `prompt()` call or to
 the next prompt_toolkit `Application`.
 """
 from __future__ import annotations
