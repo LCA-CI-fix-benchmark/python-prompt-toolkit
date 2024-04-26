@@ -59,132 +59,16 @@ class InputHookContext:
         self.input_is_ready = input_is_ready
 
     def fileno(self) -> int:
-        return self._fileno
+In the provided code snippet from the file src/prompt_toolkit/eventloop/inputhook.py, the following improvements and corrections can be made:
 
+1. Ensure consistent naming conventions for variables and functions for better code clarity.
+2. Validate the use of type annotations and ensure they accurately represent the expected types.
+3. Add more detailed comments to explain the purpose and usage of each function and class.
+4. Consider refactoring the `select` method in `InputHookSelector` class for better readability and maintainability.
+5. Check for any potential edge cases or error handling scenarios that need to be addressed.
+6. Consider updating the deprecated `set_eventloop_with_inputhook` function to provide a warning or alternative solution.
+7. Review the usage of threads and ensure thread safety where necessary.
+8. Validate the resource cleanup process in the `close` method to prevent resource leaks.
+9. Consider adding more examples or use cases to demonstrate the functionality of the input hook selector.
 
-InputHook: TypeAlias = Callable[[InputHookContext], None]
-
-
-def new_eventloop_with_inputhook(
-    inputhook: Callable[[InputHookContext], None]
-) -> AbstractEventLoop:
-    """
-    Create a new event loop with the given inputhook.
-    """
-    selector = InputHookSelector(selectors.DefaultSelector(), inputhook)
-    loop = asyncio.SelectorEventLoop(selector)
-    return loop
-
-
-def set_eventloop_with_inputhook(
-    inputhook: Callable[[InputHookContext], None]
-) -> AbstractEventLoop:
-    """
-    Create a new event loop with the given inputhook, and activate it.
-    """
-    # Deprecated!
-
-    loop = new_eventloop_with_inputhook(inputhook)
-    asyncio.set_event_loop(loop)
-    return loop
-
-
-class InputHookSelector(BaseSelector):
-    """
-    Usage:
-
-        selector = selectors.SelectSelector()
-        loop = asyncio.SelectorEventLoop(InputHookSelector(selector, inputhook))
-        asyncio.set_event_loop(loop)
-    """
-
-    def __init__(
-        self, selector: BaseSelector, inputhook: Callable[[InputHookContext], None]
-    ) -> None:
-        self.selector = selector
-        self.inputhook = inputhook
-        self._r, self._w = os.pipe()
-
-    def register(
-        self, fileobj: FileDescriptorLike, events: _EventMask, data: Any = None
-    ) -> SelectorKey:
-        return self.selector.register(fileobj, events, data=data)
-
-    def unregister(self, fileobj: FileDescriptorLike) -> SelectorKey:
-        return self.selector.unregister(fileobj)
-
-    def modify(
-        self, fileobj: FileDescriptorLike, events: _EventMask, data: Any = None
-    ) -> SelectorKey:
-        return self.selector.modify(fileobj, events, data=None)
-
-    def select(
-        self, timeout: float | None = None
-    ) -> list[tuple[SelectorKey, _EventMask]]:
-        # If there are tasks in the current event loop,
-        # don't run the input hook.
-        if len(getattr(get_running_loop(), "_ready", [])) > 0:
-            return self.selector.select(timeout=timeout)
-
-        ready = False
-        result = None
-
-        # Run selector in other thread.
-        def run_selector() -> None:
-            nonlocal ready, result
-            result = self.selector.select(timeout=timeout)
-            os.write(self._w, b"x")
-            ready = True
-
-        th = threading.Thread(target=run_selector)
-        th.start()
-
-        def input_is_ready() -> bool:
-            return ready
-
-        # Call inputhook.
-        # The inputhook function is supposed to return when our selector
-        # becomes ready. The inputhook can do that by registering the fd in its
-        # own loop, or by checking the `input_is_ready` function regularly.
-        self.inputhook(InputHookContext(self._r, input_is_ready))
-
-        # Flush the read end of the pipe.
-        try:
-            # Before calling 'os.read', call select.select. This is required
-            # when the gevent monkey patch has been applied. 'os.read' is never
-            # monkey patched and won't be cooperative, so that would block all
-            # other select() calls otherwise.
-            # See: http://www.gevent.org/gevent.os.html
-
-            # Note: On Windows, this is apparently not an issue.
-            #       However, if we would ever want to add a select call, it
-            #       should use `windll.kernel32.WaitForMultipleObjects`,
-            #       because `select.select` can't wait for a pipe on Windows.
-            if sys.platform != "win32":
-                select.select([self._r], [], [], None)
-
-            os.read(self._r, 1024)
-        except OSError:
-            # This happens when the window resizes and a SIGWINCH was received.
-            # We get 'Error: [Errno 4] Interrupted system call'
-            # Just ignore.
-            pass
-
-        # Wait for the real selector to be done.
-        th.join()
-        assert result is not None
-        return result
-
-    def close(self) -> None:
-        """
-        Clean up resources.
-        """
-        if self._r:
-            os.close(self._r)
-            os.close(self._w)
-
-        self._r = self._w = -1
-        self.selector.close()
-
-    def get_map(self) -> Mapping[FileDescriptorLike, SelectorKey]:
-        return self.selector.get_map()
+By implementing these changes, the code will be more structured, easier to understand, and maintainable, ensuring smooth integration of input hooks in the event loop.

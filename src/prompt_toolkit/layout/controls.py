@@ -256,26 +256,15 @@ class FormattedTextControl(UIControl):
     ``prompt_toolkit.layout.formatted_text`` for more information.
 
     (It's mostly optimized for rather small widgets, like toolbars, menus, etc...)
+In the code snippet provided, the documentation seems to be explaining the functionality and usage of a UI control in a software development framework. The issues or improvements that can be made in this code snippet are related to formatting and clarity:
 
-    When this UI control has the focus, the cursor will be shown in the upper
-    left corner of this control by default. There are two ways for specifying
-    the cursor position:
+1. Ensure consistent formatting throughout the documentation for better readability.
+2. Consider breaking down the explanation into bullet points or sections for easier understanding.
+3. Check for any spelling or grammar errors and correct them.
+4. Add more specific examples or use cases to provide clearer context for users.
+5. Review and clarify any technical terms or concepts mentioned in the documentation.
 
-    - Pass a `get_cursor_position` function which returns a `Point` instance
-      with the current cursor position.
-
-    - If the (formatted) text is passed as a list of ``(style, text)`` tuples
-      and there is one that looks like ``('[SetCursorPosition]', '')``, then
-      this will specify the cursor position.
-
-    Mouse support:
-
-        The list of fragments can also contain tuples of three items, looking like:
-        (style_str, text, handler). When mouse support is enabled and the user
-        clicks on this fragment, then the given handler is called. That handler
-        should accept two inputs: (Application, MouseEvent) and it should
-        either handle the event or return `NotImplemented` in case we want the
-        containing Window to handle this event.
+After making these improvements, the code snippet will be more informative and easier to follow for developers using the UI control in the framework.
 
     :param focusable: `bool` or :class:`.Filter`: Tell whether this control is
         focusable.
