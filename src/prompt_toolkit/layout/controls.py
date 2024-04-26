@@ -256,7 +256,6 @@ class FormattedTextControl(UIControl):
     ``prompt_toolkit.layout.formatted_text`` for more information.
 
     (It's mostly optimized for rather small widgets, like toolbars, menus, etc...)
-
     When this UI control has the focus, the cursor will be shown in the upper
     left corner of this control by default. There are two ways for specifying
     the cursor position:
@@ -281,14 +280,15 @@ class FormattedTextControl(UIControl):
         focusable.
 
     :param text: Text or formatted text to be displayed.
+    :param text: Text or formatted text to be displayed.
     :param style: Style string applied to the content. (If you want to style
         the whole :class:`~prompt_toolkit.layout.Window`, pass the style to the
         :class:`~prompt_toolkit.layout.Window` instead.)
     :param key_bindings: a :class:`.KeyBindings` object.
     :param get_cursor_position: A callable that returns the cursor position as
-        a `Point` instance.
     """
 
+    def __init__(
     def __init__(
         self,
         text: AnyFormattedText = "",
@@ -297,12 +297,12 @@ class FormattedTextControl(UIControl):
         key_bindings: KeyBindingsBase | None = None,
         show_cursor: bool = True,
         modal: bool = False,
-        get_cursor_position: Callable[[], Point | None] | None = None,
     ) -> None:
         self.text = text  # No type check on 'text'. This is done dynamically.
         self.style = style
         self.focusable = to_filter(focusable)
 
+        # Key bindings.
         # Key bindings.
         self.key_bindings = key_bindings
         self.show_cursor = show_cursor
@@ -313,7 +313,6 @@ class FormattedTextControl(UIControl):
         self._content_cache: SimpleCache[Hashable, UIContent] = SimpleCache(maxsize=18)
         self._fragment_cache: SimpleCache[int, StyleAndTextTuples] = SimpleCache(
             maxsize=1
-        )
         # Only cache one fragment list. We don't need the previous item.
 
         # Render info for the mouse support.
@@ -329,22 +328,22 @@ class FormattedTextControl(UIControl):
         return f"{self.__class__.__name__}({self.text!r})"
 
     def _get_formatted_text_cached(self) -> StyleAndTextTuples:
+    def _get_formatted_text_cached(self) -> StyleAndTextTuples:
         """
         Get fragments, but only retrieve fragments once during one render run.
         (This function is called several times during one rendering, because
         we also need those for calculating the dimensions.)
         """
-        return self._fragment_cache.get(
             get_app().render_counter, lambda: to_formatted_text(self.text, self.style)
         )
 
+    def preferred_width(self, max_available_width: int) -> int:
     def preferred_width(self, max_available_width: int) -> int:
         """
         Return the preferred width for this control.
         That is the width of the longest line.
         """
         text = fragment_list_to_text(self._get_formatted_text_cached())
-        line_lengths = [get_cwidth(l) for l in text.split("\n")]
         return max(line_lengths)
 
     def preferred_height(
@@ -386,12 +385,12 @@ class FormattedTextControl(UIControl):
         self._fragments = fragments_with_mouse_handlers
 
         # If there is a `[SetCursorPosition]` in the fragment list, set the
+        # If there is a `[SetCursorPosition]` in the fragment list, set the
         # cursor position here.
         def get_cursor_position(
             fragment: str = "[SetCursorPosition]",
         ) -> Point | None:
             for y, line in enumerate(fragment_lines):
-                x = 0
                 for style_str, text, *_ in line:
                     if fragment in style_str:
                         return Point(x=x, y=y)
@@ -408,6 +407,7 @@ class FormattedTextControl(UIControl):
         key = (tuple(fragments_with_mouse_handlers), width, cursor_position)
 
         def get_content() -> UIContent:
+        def get_content() -> UIContent:
             return UIContent(
                 get_line=lambda i: fragment_lines[i],
                 line_count=len(fragment_lines),
@@ -415,8 +415,6 @@ class FormattedTextControl(UIControl):
                 cursor_position=cursor_position,
                 menu_position=get_menu_position(),
             )
-
-        return self._content_cache.get(key, get_content)
 
     def mouse_handler(self, mouse_event: MouseEvent) -> NotImplementedOrNone:
         """
@@ -934,10 +932,10 @@ class SearchBufferControl(BufferControl):
         super().__init__(
             buffer=buffer,
             input_processors=input_processors,
+            buffer=buffer,
+            input_processors=input_processors,
             lexer=lexer,
             focus_on_click=focus_on_click,
-            key_bindings=key_bindings,
-        )
 
         # If this BufferControl is used as a search field for one or more other
         # BufferControls, then represents the search state.
