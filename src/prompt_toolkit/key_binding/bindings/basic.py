@@ -211,7 +211,6 @@ def load_basic_bindings() -> KeyBindings:
         event.app.clipboard.set_data(data)
 
     # Global bindings.
-
     @handle("c-z")
     def _insert_ctrl_z(event: E) -> None:
         """

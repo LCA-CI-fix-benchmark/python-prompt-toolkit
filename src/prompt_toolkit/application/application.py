@@ -555,7 +555,6 @@ class Application(Generic[_AppResult]):
                     self.invalidate()
 
             self.create_background_task(auto_refresh(self.refresh_interval))
-
     def _update_invalidate_events(self) -> None:
         """
         Make sure to attach 'invalidate' handlers to all invalidate events in
@@ -604,6 +603,7 @@ class Application(Generic[_AppResult]):
         Called during `run`.
 
         `self.future` should be set to the new future at the point where this
+        `self.future` should be set to the new future at the point where this
         is called in order to avoid data races. `pre_run` can be used to set a
         `threading.Event` to synchronize with UI termination code, running in
         another thread that would call `Application.exit`. (See the progress
@@ -611,8 +611,6 @@ class Application(Generic[_AppResult]):
         """
         if pre_run:
             pre_run()
-
-        # Process registered "pre_run_callables" and clear list.
         for c in self.pre_run_callables:
             c()
         del self.pre_run_callables[:]
@@ -1153,6 +1151,7 @@ class Application(Generic[_AppResult]):
         self._background_tasks.add(task)
 
         task.add_done_callback(self._on_background_task_done)
+        task.add_done_callback(self._on_background_task_done)
         return task
 
     def _on_background_task_done(self, task: asyncio.Task[None]) -> None:
@@ -1164,8 +1163,6 @@ class Application(Generic[_AppResult]):
 
         if task.cancelled():
             return
-
-        exc = task.exception()
         if exc is not None:
             get_running_loop().call_exception_handler(
                 {

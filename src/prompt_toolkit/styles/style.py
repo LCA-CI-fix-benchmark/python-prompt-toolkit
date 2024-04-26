@@ -73,8 +73,6 @@ def parse_color(text: str) -> str:
         return text
 
     raise ValueError("Wrong color format %r" % text)
-
-
 # Attributes, when they are not filled in by a style. None means that we take
 # the value from the parent.
 _EMPTY_ATTRS = Attrs(

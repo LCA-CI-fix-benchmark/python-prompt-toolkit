@@ -246,8 +246,6 @@ class _256ColorCache(Dict[Tuple[int, int, int], int]):
         # Turn color name into code.
         self[value] = match
         return match
-
-
 _16_fg_colors = _16ColorCache(bg=False)
 _16_bg_colors = _16ColorCache(bg=True)
 _256_colors = _256ColorCache()

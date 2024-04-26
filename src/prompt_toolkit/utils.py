@@ -97,14 +97,14 @@ class Event(Generic[_Sender]):
         if handler in self._handlers:
             self._handlers.remove(handler)
 
-    def __iadd__(self, handler: Callable[[_Sender], None]) -> Event[_Sender]:
+    def __iadd__(self, handler: Callable[[Sender], None]) -> Event[Sender]:
         """
         `event += handler` notation for adding a handler.
         """
         self.add_handler(handler)
         return self
 
-    def __isub__(self, handler: Callable[[_Sender], None]) -> Event[_Sender]:
+    def __isub__(self, handler: Callable[[Sender], None]) -> Event[Sender]:
         """
         `event -= handler` notation for removing a handler.
         """

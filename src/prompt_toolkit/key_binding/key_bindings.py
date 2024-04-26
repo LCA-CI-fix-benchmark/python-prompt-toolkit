@@ -347,7 +347,7 @@ class KeyBindings(KeyBindingsBase):
 
         else:
             assert len(args) > 0
-            args = cast(Tuple[Union[Keys, str]], args)
+            args = cast(Tuple[Union[Keys, str], args)
 
             # Remove this sequence of key bindings.
             keys = tuple(_parse_key(k) for k in args)

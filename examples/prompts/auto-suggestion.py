@@ -10,8 +10,6 @@ suggestion.
 from prompt_toolkit import PromptSession
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.history import InMemoryHistory
-
-
 def main():
     # Create some history first. (Easy for testing.)
     history = InMemoryHistory()
