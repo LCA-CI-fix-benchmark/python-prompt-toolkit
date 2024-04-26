@@ -1160,6 +1160,7 @@ class Application(Generic[_AppResult]):
         Called when a background task completes. Remove it from
         `_background_tasks`, and handle exceptions if any.
         """
+        """
         self._background_tasks.discard(task)
 
         if task.cancelled():

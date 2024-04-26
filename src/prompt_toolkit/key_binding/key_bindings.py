@@ -340,10 +340,7 @@ class KeyBindings(KeyBindingsBase):
             function = args[0]
 
             # Remove the given function.
-            for b in self.bindings:
-                if b.handler == function:
-                    self.bindings.remove(b)
-                    found = True
+            self.bindings = [b for b in self.bindings if b.handler != function]
 
         else:
             assert len(args) > 0
