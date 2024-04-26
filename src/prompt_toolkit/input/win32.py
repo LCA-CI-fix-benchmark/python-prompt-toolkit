@@ -496,6 +496,9 @@ class ConsoleInputReader:
         #       typing some special characters, like a backslash. We don't want
         #       all backslashes to be prefixed with escape. (Esc-\ has a
         #       meaning in E-macs, for instance.)
+
+# Add a blank line here for readability
+
         if result:
             meta_pressed = control_key_state & self.LEFT_ALT_PRESSED
 

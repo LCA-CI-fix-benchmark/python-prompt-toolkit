@@ -166,14 +166,9 @@ html_logo = "images/logo_400px.png"
 # html_favicon = None
 
 # Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-# html_static_path = ["_static"]
+html_static_path = ["_static"]
 
-# Add any extra paths that contain custom files (such as robots.txt or
-# .htaccess) here, relative to this directory. These files are copied
-# directly to the root of the documentation.
-# html_extra_path = []
+html_extra_path = []
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
@@ -206,17 +201,11 @@ html_logo = "images/logo_400px.png"
 # html_show_sphinx = True
 
 # If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
-# html_show_copyright = True
+html_show_sphinx = True
 
-# If true, an OpenSearch description file will be output, and all pages will
-# contain a <link> tag referring to it.  The value of this option must be the
-# base URL from which the finished HTML is served.
-# html_use_opensearch = ''
+html_show_copyright = True
 
-# This is the file name suffix for HTML files (e.g. ".xhtml").
-# html_file_suffix = None
-
-# Output file base name for HTML help builder.
+html_use_opensearch = ''
 htmlhelp_basename = "prompt_toolkitdoc"
 
 

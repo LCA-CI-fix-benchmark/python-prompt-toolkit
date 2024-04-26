@@ -16,7 +16,7 @@ top_text = (
     "[q] Quit [a] Focus left top [b] Right top [c] Left bottom [d] Right bottom."
 )
 
-LIPSUM = """Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+LIPSUM = """Lorem ipsum dolor sit amet, consectetur adipiscing elit."""
 Maecenas quis interdum enim. Nam viverra, mauris et blandit malesuada, ante est
 bibendum mauris, ac dignissim dui tellus quis ligula. Aenean condimentum leo at
 dignissim placerat. In vel dictum ex, vulputate accumsan mi. Donec ut quam

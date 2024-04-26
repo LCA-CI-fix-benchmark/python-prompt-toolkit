@@ -265,6 +265,8 @@ class PromptSession(Generic[_T]):
         syntax highlighting.
     :param validator: :class:`~prompt_toolkit.validation.Validator` instance
         for input validation.
+    # Add a blank line here for readability
+
     :param completer: :class:`~prompt_toolkit.completion.Completer` instance
         for input completion.
     :param complete_in_thread: `bool` or

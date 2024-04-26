@@ -609,6 +609,9 @@ class Application(Generic[_AppResult]):
         another thread that would call `Application.exit`. (See the progress
         bar code for an example.)
         """
+
+# Add a blank line here for readability
+
         if pre_run:
             pre_run()
 
@@ -1091,15 +1094,17 @@ class Application(Generic[_AppResult]):
                 app.renderer.erase()
 
                 # Detach input and dispatch to debugger.
-                with app.input.detach():
-                    with app.input.cooked_mode():
-                        ready.set()
                         # Here we block the App's event loop thread until the
                         # debugger resumes. We could have used `with
                         # run_in_terminal.in_terminal():` like the commented
                         # code above, but it seems to work better if we
                         # completely stop the main event loop while debugging.
                         done.wait()
+
+# Add a blank line here for readability
+
+            self.create_background_task(in_loop())
+            ready.wait()
 
             self.create_background_task(in_loop())
             ready.wait()

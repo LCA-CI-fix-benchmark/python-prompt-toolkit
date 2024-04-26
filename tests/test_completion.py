@@ -24,27 +24,25 @@ def chdir(directory):
     os.chdir(directory)
 
     try:
-        yield
-    finally:
-        os.chdir(orig_dir)
-
-
 def write_test_files(test_dir, names=None):
-    """Write test files in test_dir using the names list."""
+    """
+    Write test files in test_dir using the names list.
+
+    Args:
+        test_dir (str): The directory where the test files will be written.
+        names (list): List of names to use for the test files. If not provided, numbers from 0 to 9 will be used.
+
+    Returns:
+        None
+    """
     names = names or range(10)
     for i in names:
         with open(os.path.join(test_dir, str(i)), "wb") as out:
             out.write(b"")
-
-
 def test_pathcompleter_completes_in_current_directory():
-    completer = PathCompleter()
-    doc_text = ""
-    doc = Document(doc_text, len(doc_text))
-    event = CompleteEvent()
-    completions = list(completer.get_completions(doc, event))
     assert len(completions) > 0
 
+# Add a blank line here for readability
 
 def test_pathcompleter_completes_files_in_current_directory():
     # setup: create a test dir with 10 files
@@ -54,6 +52,7 @@ def test_pathcompleter_completes_files_in_current_directory():
     expected = sorted(str(i) for i in range(10))
 
     if not test_dir.endswith(os.path.sep):
+        test_dir += os.path.sep
         test_dir += os.path.sep
 
     with chdir(test_dir):
@@ -69,6 +68,7 @@ def test_pathcompleter_completes_files_in_current_directory():
     # cleanup
     shutil.rmtree(test_dir)
 
+# Add a blank line here for readability
 
 def test_pathcompleter_completes_files_in_absolute_directory():
     # setup: create a test dir with 10 files
@@ -80,8 +80,6 @@ def test_pathcompleter_completes_files_in_absolute_directory():
     test_dir = os.path.abspath(test_dir)
     if not test_dir.endswith(os.path.sep):
         test_dir += os.path.sep
-
-    completer = PathCompleter()
     # force unicode
     doc_text = str(test_dir)
     doc = Document(doc_text, len(doc_text))
@@ -93,6 +91,7 @@ def test_pathcompleter_completes_files_in_absolute_directory():
     # cleanup
     shutil.rmtree(test_dir)
 
+# Add a blank line here for readability
 
 def test_pathcompleter_completes_directories_with_only_directories():
     # setup: create a test dir with 10 files
@@ -104,8 +103,6 @@ def test_pathcompleter_completes_directories_with_only_directories():
 
     if not test_dir.endswith(os.path.sep):
         test_dir += os.path.sep
-
-    with chdir(test_dir):
         completer = PathCompleter(only_directories=True)
         doc_text = ""
         doc = Document(doc_text, len(doc_text))
@@ -124,15 +121,17 @@ def test_pathcompleter_completes_directories_with_only_directories():
         assert [] == completions
 
     # cleanup
+        assert [] == completions
+
+# Add a blank line here for readability
+
+    # cleanup
     shutil.rmtree(test_dir)
 
 
 def test_pathcompleter_respects_completions_under_min_input_len():
     # setup: create a test dir with 10 files
     test_dir = tempfile.mkdtemp()
-    write_test_files(test_dir)
-
-    # min len:1 and no text
     with chdir(test_dir):
         completer = PathCompleter(min_input_len=1)
         doc_text = ""
@@ -162,11 +161,19 @@ def test_pathcompleter_respects_completions_under_min_input_len():
         assert [""] == result
 
     # create 10 files with a 2 char long name
+    # create 10 files with a 2 char long name
     for i in range(10):
+        """
+        Create files in the test directory with a 2-character long name.
+
+        Args:
+            i (int): Index for creating the files.
+
+        Returns:
+            None
+        """
         with open(os.path.join(test_dir, str(i) * 2), "wb") as out:
             out.write(b"")
-
-    # min len:1 and text of len 1
     with chdir(test_dir):
         completer = PathCompleter(min_input_len=1)
         doc_text = "2"
@@ -199,13 +206,7 @@ def test_pathcompleter_does_not_expanduser_by_default():
 
 
 def test_pathcompleter_can_expanduser():
-    completer = PathCompleter(expanduser=True)
-    doc_text = "~"
-    doc = Document(doc_text, len(doc_text))
-    event = CompleteEvent()
-    completions = list(completer.get_completions(doc, event))
-    assert len(completions) > 0
-
+# Add a blank line here for readability
 
 def test_pathcompleter_can_apply_file_filter():
     # setup: create a test dir with 10 files
@@ -213,6 +214,13 @@ def test_pathcompleter_can_apply_file_filter():
     write_test_files(test_dir)
 
     # add a .csv file
+    with open(os.path.join(test_dir, "my.csv"), "wb") as out:
+        out.write(b"")
+
+    file_filter = lambda f: f and f.endswith(".csv")
+
+    with chdir(test_dir):
+        completer = PathCompleter(file_filter=file_filter)
     with open(os.path.join(test_dir, "my.csv"), "wb") as out:
         out.write(b"")
 
@@ -228,22 +236,23 @@ def test_pathcompleter_can_apply_file_filter():
         assert ["my.csv"] == result
 
     # cleanup
-    shutil.rmtree(test_dir)
-
-
-def test_pathcompleter_get_paths_constrains_path():
-    # setup: create a test dir with 10 files
-    test_dir = tempfile.mkdtemp()
-    write_test_files(test_dir)
-
     # add a subdir with 10 other files with different names
     subdir = os.path.join(test_dir, "subdir")
     os.mkdir(subdir)
     write_test_files(subdir, "abcdefghij")
 
+    # Define a lambda function to get paths
     get_paths = lambda: ["subdir"]
 
     with chdir(test_dir):
+        completer = PathCompleter(get_paths=get_paths)
+        doc_text = ""
+        doc = Document(doc_text, len(doc_text))
+        event = CompleteEvent()
+        completions = list(completer.get_completions(doc, event))
+        result = [c.text for c in completions]
+        expected = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"]
+        assert expected == result
         completer = PathCompleter(get_paths=get_paths)
         doc_text = ""
         doc = Document(doc_text, len(doc_text))

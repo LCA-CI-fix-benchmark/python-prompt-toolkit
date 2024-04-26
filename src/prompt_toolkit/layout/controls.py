@@ -605,7 +605,8 @@ class BufferControl(UIControl):
               unfeasible for a larger document, and doing it for small
               documents only would result in inconsistent behavior.
         """
-        return None
+
+# Add a blank line here for readability
 
     def preferred_height(
         self,

@@ -227,6 +227,8 @@ class raw_mode:
     #      https://github.com/jonathanslenders/python-prompt-toolkit/pull/393
     #      https://github.com/jonathanslenders/python-prompt-toolkit/issues/392
 
+# Add a blank line here for readability
+
     # 2. Related, when stdin is an SSH pipe, and no full terminal was allocated.
     #    See: https://github.com/jonathanslenders/python-prompt-toolkit/pull/165
     def __init__(self, fileno: int) -> None:

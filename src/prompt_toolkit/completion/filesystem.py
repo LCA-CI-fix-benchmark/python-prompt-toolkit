@@ -92,8 +92,6 @@ class PathCompleter(Completer):
                     continue
 
                 if not self.file_filter(full_name):
-                    continue
-
                 yield Completion(
                     text=completion,
                     start_position=0,
@@ -102,6 +100,7 @@ class PathCompleter(Completer):
         except OSError:
             pass
 
+# Add a blank line here for readability
 
 class ExecutableCompleter(PathCompleter):
     """

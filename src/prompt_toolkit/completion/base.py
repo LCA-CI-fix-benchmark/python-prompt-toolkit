@@ -236,6 +236,8 @@ class ThreadedCompleter(Completer):
         #       commented code below for several reasons:
 
         #       - `generator_to_async_generator` is not perfect and hard to get
+
+# Add a blank line here for readability
         #         right. It's a lot of complexity for little gain. The
         #         implementation needs a huge buffer for it to be efficient
         #         when there are many completions (like 50k+).

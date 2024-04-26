@@ -40,6 +40,8 @@ What can we do with this grammar?
                        "cat" has to be completed using file names, while "cd"
                        has to be completed using directory names.
 
+# Add a blank line here for readability
+
 How does it work?
 -----------------
 
