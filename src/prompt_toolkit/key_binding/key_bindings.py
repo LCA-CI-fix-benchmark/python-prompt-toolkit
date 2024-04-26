@@ -339,13 +339,14 @@ class KeyBindings(KeyBindingsBase):
             assert len(args) == 1
             function = args[0]
 
-            # Remove the given function.
+            # Create a list of items to remove and then remove them.
+            to_remove = []
             for b in self.bindings:
                 if b.handler == function:
-                    self.bindings.remove(b)
-                    found = True
+                    to_remove.append(b)
 
-        else:
+            for item in to_remove:
+                self.bindings.remove(item)
             assert len(args) > 0
             args = cast(Tuple[Union[Keys, str]], args)
 

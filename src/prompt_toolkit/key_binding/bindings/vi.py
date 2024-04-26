@@ -281,6 +281,8 @@ def create_text_object_decorator(
                         else:
                             selection_state.type = SelectionType.CHARACTERS
                     else:
+                        # Add the block of code to handle the condition when the 'if' condition is False
+                        pass
                         event.current_buffer.cursor_position += text_object.start
 
             # Make it possible to chain @text_object decorators.
@@ -1480,13 +1482,11 @@ def load_vi_bindings() -> KeyBindingsBase:
             vi_state = event.app.vi_state
 
             type = TextObjectType.EXCLUSIVE
-
-            if vi_state.last_character_find:
                 char = vi_state.last_character_find.character
                 backwards = vi_state.last_character_find.backwards
 
-                if reverse:
-                    backwards = not backwards
+                # Assuming 'reverse' should be 'backwards' based on the context
+                if backwards:
 
                 if backwards:
                     pos = event.current_buffer.document.find_backwards(
@@ -1496,7 +1496,7 @@ def load_vi_bindings() -> KeyBindingsBase:
                     pos = event.current_buffer.document.find(
                         char, in_current_line=True, count=event.arg
                     )
-                    type = TextObjectType.INCLUSIVE
+                    type = TextObjectType.INCLUSIVE  # Define 'type' before the conditional blocks
             if pos:
                 return TextObject(pos, type=type)
             else:

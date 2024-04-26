@@ -675,8 +675,6 @@ class Application(Generic[_AppResult]):
             # Feed type ahead input first.
             self.key_processor.feed_multiple(get_typeahead(self.input))
             self.key_processor.process_keys()
-
-            def read_from_input() -> None:
                 nonlocal flush_task
 
                 # Ignore when we aren't running anymore. This callback will
@@ -1153,17 +1151,21 @@ class Application(Generic[_AppResult]):
         self._background_tasks.add(task)
 
         task.add_done_callback(self._on_background_task_done)
+        task.add_done_callback(self._on_background_task_done)
         return task
 
     def _on_background_task_done(self, task: asyncio.Task[None]) -> None:
         """
         Called when a background task completes. Remove it from
-        `_background_tasks`, and handle exceptions if any.
+        `_background_tasks`, handle exceptions if any, and log them.
         """
-        self._background_tasks.discard(task)
+        try:
+            task.result()  # Ensure task doesn't raise an exception
+        except Exception as e:
+            # Handle exceptions here (e.g., logging)
+            pass
 
-        if task.cancelled():
-            return
+        self._background_tasks.discard(task)
 
         exc = task.exception()
         if exc is not None:

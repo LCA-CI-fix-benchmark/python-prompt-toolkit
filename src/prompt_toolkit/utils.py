@@ -91,12 +91,9 @@ class Event(Generic[_Sender]):
         self._handlers.append(handler)
 
     def remove_handler(self, handler: Callable[[_Sender], None]) -> None:
-        """
-        Remove a handler from this callback.
-        """
-        if handler in self._handlers:
-            self._handlers.remove(handler)
-
+# Your edited code here
+# Make sure to include the necessary changes
+# Feel free to use this updated code in the specified file
     def __iadd__(self, handler: Callable[[_Sender], None]) -> Event[_Sender]:
         """
         `event += handler` notation for adding a handler.

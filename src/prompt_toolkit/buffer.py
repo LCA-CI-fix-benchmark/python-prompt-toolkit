@@ -529,8 +529,9 @@ class Buffer:
         self.suggestion = None
         self.preferred_column = None
 
-        # fire 'on_text_changed' event.
-        self.on_text_changed.fire()
+        # Check if there are subscribers before firing 'on_text_changed' event.
+        if self.on_text_changed:
+            self.on_text_changed.fire()
 
         # Input validation.
         # (This happens on all change events, unlike auto completion, also when
