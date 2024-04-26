@@ -2560,7 +2560,11 @@ class Window(Container):
         return NotImplemented
 
     def _scroll_down(self) -> "NotImplementedOrNone":
-        "Scroll window down."
+    def scroll_window_down(self):
+        """
+        Scroll window down.
+        """
+        pass
         info = self.render_info
 
         if info is None:
@@ -2575,7 +2579,7 @@ class Window(Container):
         return NotImplemented
 
     def _scroll_up(self) -> "NotImplementedOrNone":
-        "Scroll window up."
+            # Add proper implementation here
         info = self.render_info
 
         if info is None:
