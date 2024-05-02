@@ -623,7 +623,7 @@ class Application(Generic[_AppResult]):
         set_exception_handler: bool = True,
         handle_sigint: bool = True,
         slow_callback_duration: float = 0.5,
-    ) -> _AppResult:
+    ) -> _AppResult
         """
         Run the prompt_toolkit :class:`~prompt_toolkit.application.Application`
         until :meth:`~prompt_toolkit.application.Application.exit` has been
@@ -900,7 +900,7 @@ class Application(Generic[_AppResult]):
         set_exception_handler: bool = True,
         handle_sigint: bool = True,
         in_thread: bool = False,
-        inputhook: InputHook | None = None,
+        inputhook: InputHook | None = None
     ) -> _AppResult:
         """
         A blocking 'run' call that waits until the UI is finished.
@@ -996,10 +996,9 @@ class Application(Generic[_AppResult]):
         else:
             # No loop installed. Run like usual.
             return asyncio.run(coro)
-
     def _handle_exception(
         self, loop: AbstractEventLoop, context: dict[str, Any]
-    ) -> None:
+    ) -> None
         """
         Handler for event loop exceptions.
         This will print the exception, using run_in_terminal.
@@ -1021,15 +1020,12 @@ class Application(Generic[_AppResult]):
 
                 await _do_wait_for_enter("Press ENTER to continue...")
 
-        ensure_future(in_term())
-
     @contextmanager
     def _enable_breakpointhook(self) -> Generator[None, None, None]:
         """
         Install our custom breakpointhook for the duration of this context
         manager. (We will only install the hook if no other custom hook was
         set.)
-        """
         if sys.breakpointhook == sys.__breakpointhook__:
             sys.breakpointhook = self._breakpointhook
 
@@ -1037,10 +1033,14 @@ class Application(Generic[_AppResult]):
                 yield
             finally:
                 sys.breakpointhook = sys.__breakpointhook__
-        else:
-            yield
-
     def _breakpointhook(self, *a: object, **kw: object) -> None:
+        """
+        Breakpointhook which uses PDB, but ensures that the application is
+        hidden and input echoing is restored during each debugger dispatch.
+        app = self
+        # Inline import on purpose. We don't want to import pdb, if not needed.
+        import pdb
+        from types import FrameType
         """
         Breakpointhook which uses PDB, but ensures that the application is
         hidden and input echoing is restored during each debugger dispatch.
@@ -1049,18 +1049,6 @@ class Application(Generic[_AppResult]):
         event loop will be blocked while the PDB input is displayed. The event
         will continue after leaving the debugger.
         """
-        app = self
-        # Inline import on purpose. We don't want to import pdb, if not needed.
-        import pdb
-        from types import FrameType
-
-        TraceDispatch = Callable[[FrameType, str, Any], Any]
-
-        @contextmanager
-        def hide_app_from_eventloop_thread() -> Generator[None, None, None]:
-            """Stop application if `__breakpointhook__` is called from within
-            the App's event loop."""
-            # Hide application.
             app.renderer.erase()
 
             # Detach input and dispatch to debugger.
@@ -1070,14 +1058,14 @@ class Application(Generic[_AppResult]):
 
             # Note: we don't render the application again here, because
             # there's a good chance that there's a breakpoint on the next
-            # line. This paint/erase cycle would move the PDB prompt back
-            # to the middle of the screen.
+            """Stop application if `__breakpointhook__` is called from within
+            the App's event loop."""
+            # Hide application.
+            app.renderer.erase()
 
-        @contextmanager
-        def hide_app_from_other_thread() -> Generator[None, None, None]:
-            """Stop application if `__breakpointhook__` is called from a
-            thread other than the App's event loop."""
-            ready = threading.Event()
+            # Detach input and dispatch to debugger.
+            with app.input.detach():
+                with app.input.cooked_mode():
             done = threading.Event()
 
             async def in_loop() -> None:
@@ -1124,6 +1112,18 @@ class Application(Generic[_AppResult]):
 
         frame = sys._getframe().f_back
         CustomPdb(stdout=sys.__stdout__).set_trace(frame)
+                if app._loop_thread is None:
+                    return super().trace_dispatch(frame, event, arg)
+
+                if app._loop_thread == threading.current_thread():
+                    with hide_app_from_eventloop_thread():
+                        return super().trace_dispatch(frame, event, arg)
+
+                with hide_app_from_other_thread():
+                    return super().trace_dispatch(frame, event, arg)
+
+        frame = sys._getframe().f_back
+        CustomPdb(stdout=sys.__stdout__).set_trace(frame)
 
     def create_background_task(
         self, coroutine: Coroutine[Any, Any, None]
@@ -1132,30 +1132,17 @@ class Application(Generic[_AppResult]):
         Start a background task (coroutine) for the running application. When
         the `Application` terminates, unfinished background tasks will be
         cancelled.
+        task: asyncio.Task[None] = loop.create_task(coroutine)
+        self._background_tasks.add(task)
 
-        Given that we still support Python versions before 3.11, we can't use
-        task groups (and exception groups), because of that, these background
         tasks are not allowed to raise exceptions. If they do, we'll call the
         default exception handler from the event loop.
 
         If at some point, we have Python 3.11 as the minimum supported Python
         version, then we can use a `TaskGroup` (with the lifetime of
-        `Application.run_async()`, and run run the background tasks in there.
+        `Application.run_async()`, and run the background tasks in there.
 
         This is not threadsafe.
-        """
-        loop = self.loop or get_running_loop()
-        task: asyncio.Task[None] = loop.create_task(coroutine)
-        self._background_tasks.add(task)
-
-        task.add_done_callback(self._on_background_task_done)
-        return task
-
-    def _on_background_task_done(self, task: asyncio.Task[None]) -> None:
-        """
-        Called when a background task completes. Remove it from
-        `_background_tasks`, and handle exceptions if any.
-        """
         self._background_tasks.discard(task)
 
         if task.cancelled():
@@ -1169,18 +1156,20 @@ class Application(Generic[_AppResult]):
                     "raised an unexpected exception.",
                     "exception": exc,
                     "task": task,
+        self._background_tasks.discard(task)
+
+        if task.cancelled():
+            return
+
+        exc = task.exception()
+        if exc is not None:
+            get_running_loop().call_exception_handler(
+                {
+                    "message": f"prompt_toolkit.Application background task {task!r} "
+                    "raised an unexpected exception.",
+                    "exception": exc,
                 }
             )
-
-    async def cancel_and_wait_for_background_tasks(self) -> None:
-        """
-        Cancel all background tasks, and wait for the cancellation to complete.
-        If any of the background tasks raised an exception, this will also
-        propagate the exception.
-
-        (If we had nurseries like Trio, this would be the `__aexit__` of a
-        nursery.)
-        """
         for task in self._background_tasks:
             task.cancel()
 
@@ -1201,17 +1190,17 @@ class Application(Generic[_AppResult]):
         #       `_on_background_task_done`.
         if len(self._background_tasks) > 0:
             await asyncio.wait(
-                self._background_tasks, timeout=None, return_when=asyncio.ALL_COMPLETED
-            )
-
-    async def _poll_output_size(self) -> None:
-        """
-        Coroutine for polling the terminal dimensions.
-
-        Useful for situations where `attach_winch_signal_handler` is not sufficient:
-        - If we are not running in the main thread.
-        - On Windows.
-        """
+        # (If we get cancelled here, then it's important to not suppress the
+        # `CancelledError`, and have it propagate.)
+        # NOTE: Currently, if we get cancelled at this point then we can't wait
+        #       for the cancellation to complete (in the future, we should be
+        #       using anyio or Python's 3.11 TaskGroup.)
+        #       Also, if we had exception groups, we could propagate an
+        #       `ExceptionGroup` if something went wrong here. Right now, we
+        #       don't propagate exceptions, but have them printed in
+        #       `_on_background_task_done`.
+        if len(self._background_tasks) > 0:
+            await asyncio.wait(
         size: Size | None = None
         interval = self.terminal_size_polling_interval
 
@@ -1223,13 +1212,13 @@ class Application(Generic[_AppResult]):
             new_size = self.output.get_size()
 
             if size is not None and new_size != size:
-                self._on_resize()
-            size = new_size
+        size: Size | None = None
+        interval = self.terminal_size_polling_interval
 
-    def cpr_not_supported_callback(self) -> None:
-        """
-        Called when we don't receive the cursor position response in time.
-        """
+        if interval is None:
+            return
+
+        while True:
         if not self.output.responds_to_cpr:
             return  # We know about this already.
 
@@ -1257,6 +1246,17 @@ class Application(Generic[_AppResult]):
 
     def exit(
         self,
+    def exit(self, *, result: _AppResult, style: str = "") -> None:
+        "Exit with `_AppResult`."
+
+    @overload
+    def exit(
+        self, *, exception: BaseException | type[BaseException], style: str = ""
+    ) -> None:
+        "Exit with exception."
+
+    def exit(
+        self,
         result: _AppResult | None = None,
         exception: BaseException | type[BaseException] | None = None,
         style: str = "",
@@ -1268,17 +1268,6 @@ class Application(Generic[_AppResult]):
 
             If `Application.exit` is called before `Application.run()` is
             called, then the `Application` won't exit (because the
-            `Application.future` doesn't correspond to the current run). Use a
-            `pre_run` hook and an event to synchronize the closing if there's a
-            chance this can happen.
-
-        :param result: Set this result for the application.
-        :param exception: Set this exception as the result for an application. For
-            a prompt, this is often `EOFError` or `KeyboardInterrupt`.
-        :param style: Apply this style on the whole content when quitting,
-            often this is 'class:exiting' for a prompt. (Used when
-            `erase_when_done` is not set.)
-        """
         assert result is None or exception is None
 
         if self.future is None:
@@ -1291,9 +1280,20 @@ class Application(Generic[_AppResult]):
 
         if exception is not None:
             self.future.set_exception(exception)
-        else:
-            self.future.set_result(cast(_AppResult, result))
+        if self.future is None:
+            raise Exception("Application is not running. Application.exit() failed.")
 
+        if self.future.done():
+            raise Exception("Return value already set. Application.exit() failed.")
+        # Note: only do this if the input queue is not empty, and a return
+        # value has not been set. Otherwise, we won't be able to read the
+        # response anyway.
+        if not self.key_processor.input_queue and not self.is_done:
+            self.renderer.request_absolute_cursor_position()
+
+    async def run_system_command(
+        self,
+        command: str,
     def _request_absolute_cursor_position(self) -> None:
         """
         Send CPR request.
@@ -1309,19 +1309,6 @@ class Application(Generic[_AppResult]):
         command: str,
         wait_for_enter: bool = True,
         display_before_text: AnyFormattedText = "",
-        wait_text: str = "Press ENTER to continue...",
-    ) -> None:
-        """
-        Run system command (While hiding the prompt. When finished, all the
-        output will scroll above the prompt.)
-
-        :param command: Shell command to be executed.
-        :param wait_for_enter: FWait for the user to press enter, when the
-            command is finished.
-        :param display_before_text: If given, text to be displayed before the
-            command executes.
-        :return: A `Future` object.
-        """
         async with in_terminal():
             # Try to use the same input/output file descriptors as the one,
             # used to run this application.
@@ -1343,17 +1330,17 @@ class Application(Generic[_AppResult]):
             await run_in_executor_with_context(run_command)
 
             # Wait for the user to press enter.
-            if wait_for_enter:
-                await _do_wait_for_enter(wait_text)
+                output_fd = self.output.fileno()
+            except AttributeError:
+                output_fd = sys.stdout.fileno()
 
-    def suspend_to_background(self, suspend_group: bool = True) -> None:
-        """
-        (Not thread safe -- to be called from inside the key bindings.)
-        Suspend process.
+            # Run sub process.
+            def run_command() -> None:
+                self.print_text(display_before_text)
+                p = Popen(command, shell=True, stdin=input_fd, stdout=output_fd)
+                p.wait()
 
-        :param suspend_group: When true, suspend the whole process group.
-            (This is the default, and probably what you want.)
-        """
+            await run_in_executor_with_context(run_command)
         # Only suspend when the operating system supports it.
         # (Not on Windows.)
         if _SIGTSTP is not None:
@@ -1371,18 +1358,17 @@ class Application(Generic[_AppResult]):
                     os.kill(os.getpid(), signal)
 
             run_in_terminal(run)
+            def run() -> None:
+                signal = cast(int, _SIGTSTP)
+                # Send `SIGTSTP` to own process.
+                # This will cause it to suspend.
 
-    def print_text(
-        self, text: AnyFormattedText, style: BaseStyle | None = None
-    ) -> None:
-        """
-        Print a list of (style_str, text) tuples to the output.
-        (When the UI is running, this method has to be called through
-        `run_in_terminal`, otherwise it will destroy the UI.)
-
-        :param text: List of ``(style_str, text)`` tuples.
-        :param style: Style class to use. Defaults to the active style in the CLI.
-        """
+                # Usually we want the whole process group to be suspended. This
+                # handles the case when input is piped from another process.
+                if suspend_group:
+                    os.kill(0, signal)
+                else:
+                    os.kill(os.getpid(), signal)
         print_formatted_text(
             output=self.output,
             formatted_text=text,
@@ -1399,8 +1385,21 @@ class Application(Generic[_AppResult]):
     @property
     def is_done(self) -> bool:
         if self.future:
-            return self.future.done()
-        return False
+            formatted_text=text,
+            style=style or self._merged_style,
+            color_depth=self.color_depth,
+            style_transformation=self.style_transformation,
+        )
+
+    @property
+    def is_running(self) -> bool:
+        attrs_for_style = self.renderer._attrs_for_style
+
+        if attrs_for_style:
+            return sorted(
+                re.sub(r"\s+", " ", style_str).strip()
+                for style_str in attrs_for_style.keys()
+            )
 
     def get_used_style_strings(self) -> list[str]:
         """
@@ -1411,8 +1410,9 @@ class Application(Generic[_AppResult]):
 
         if attrs_for_style:
             return sorted(
-                re.sub(r"\s+", " ", style_str).strip()
-                for style_str in attrs_for_style.keys()
+    def __init__(self, app: Application[_AppResult]) -> None:
+        self.app = app
+        self._cache: SimpleCache[
             )
 
         return []
@@ -1435,21 +1435,6 @@ class _CombinedRegistry(KeyBindingsBase):
     def _version(self) -> Hashable:
         """Not needed - this object is not going to be wrapped in another
         KeyBindings object."""
-        raise NotImplementedError
-
-    @property
-    def bindings(self) -> list[Binding]:
-        """Not needed - this object is not going to be wrapped in another
-        KeyBindings object."""
-        raise NotImplementedError
-
-    def _create_key_bindings(
-        self, current_window: Window, other_controls: list[UIControl]
-    ) -> KeyBindingsBase:
-        """
-        Create a `KeyBindings` object that merges the `KeyBindings` from the
-        `UIControl` with all the parent controls and the global key bindings.
-        """
         key_bindings = []
         collected_containers = set()
 
@@ -1511,22 +1496,37 @@ class _CombinedRegistry(KeyBindingsBase):
         return self._key_bindings.get_bindings_for_keys(keys)
 
     def get_bindings_starting_with_keys(self, keys: KeysTuple) -> list[Binding]:
-        return self._key_bindings.get_bindings_starting_with_keys(keys)
+    @property
+    def _key_bindings(self) -> KeyBindingsBase:
+        current_window = self.app.layout.current_window
+        other_controls = list(self.app.layout.find_all_controls())
+        key = current_window, frozenset(other_controls)
 
-
-async def _do_wait_for_enter(wait_text: AnyFormattedText) -> None:
-    """
-    Create a sub application to wait for the enter key press.
-    This has two advantages over using 'input'/'raw_input':
-    - This will share the same input/output I/O.
-    - This doesn't block the event loop.
-    """
+        return self._cache.get(
+            key, lambda: self._create_key_bindings(current_window, other_controls)
+        )
     from prompt_toolkit.shortcuts import PromptSession
 
     key_bindings = KeyBindings()
 
     @key_bindings.add("enter")
     def _ok(event: E) -> None:
+        event.app.exit()
+
+    @key_bindings.add(Keys.Any)
+    def _ignore(event: E) -> None:
+        "Disallow typing."
+        pass
+
+    session: PromptSession[None] = PromptSession(
+        message=wait_text, key_bindings=key_bindings
+    )
+    try:
+        await session.app.run_async()
+    except KeyboardInterrupt:
+        pass  # Control-c pressed. Don't propagate this error.
+
+
         event.app.exit()
 
     @key_bindings.add(Keys.Any)
@@ -1554,7 +1554,7 @@ def attach_winch_signal_handler(
     The `Application.run` method will register SIGWINCH, so that it will
     properly repaint when the terminal window resizes. However, using
     `run_in_terminal`, we can temporarily send an application to the
-    background, and run an other app in between, which will then overwrite the
+    background, and run another app in between, which will then overwrite the
     SIGWINCH. This is why it's important to restore the handler when the app
     terminates.
     """
@@ -1572,17 +1572,3 @@ def attach_winch_signal_handler(
     # Keep track of the previous handler.
     # (Only UnixSelectorEventloop has `_signal_handlers`.)
     loop = get_running_loop()
-    previous_winch_handler = getattr(loop, "_signal_handlers", {}).get(sigwinch)
-
-    try:
-        loop.add_signal_handler(sigwinch, handler)
-        yield
-    finally:
-        # Restore the previous signal handler.
-        loop.remove_signal_handler(sigwinch)
-        if previous_winch_handler is not None:
-            loop.add_signal_handler(
-                sigwinch,
-                previous_winch_handler._callback,
-                *previous_winch_handler._args,
-            )

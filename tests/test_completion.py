@@ -64,11 +64,8 @@ def test_pathcompleter_completes_files_in_current_directory():
         event = CompleteEvent()
         completions = list(completer.get_completions(doc, event))
         result = sorted(c.text for c in completions)
-        assert expected == result
-
-    # cleanup
-    shutil.rmtree(test_dir)
-
+import shutil
+import tempfile
 
 def test_pathcompleter_completes_files_in_absolute_directory():
     # setup: create a test dir with 10 files
@@ -76,7 +73,6 @@ def test_pathcompleter_completes_files_in_absolute_directory():
     write_test_files(test_dir)
 
     expected = sorted(str(i) for i in range(10))
-
     test_dir = os.path.abspath(test_dir)
     if not test_dir.endswith(os.path.sep):
         test_dir += os.path.sep
@@ -126,13 +122,10 @@ def test_pathcompleter_completes_directories_with_only_directories():
     # cleanup
     shutil.rmtree(test_dir)
 
+import shutil
 
 def test_pathcompleter_respects_completions_under_min_input_len():
     # setup: create a test dir with 10 files
-    test_dir = tempfile.mkdtemp()
-    write_test_files(test_dir)
-
-    # min len:1 and no text
     with chdir(test_dir):
         completer = PathCompleter(min_input_len=1)
         doc_text = ""
