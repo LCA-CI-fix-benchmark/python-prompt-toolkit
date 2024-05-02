@@ -40,13 +40,10 @@ from .base import Input
 
 __all__ = [
     "store_typeahead",
-    "get_typeahead",
     "clear_typeahead",
 ]
 
 _buffer: dict[str, list[KeyPress]] = defaultdict(list)
-
-
 def store_typeahead(input_obj: Input, key_presses: list[KeyPress]) -> None:
     """
     Insert typeahead key presses for the given input.

@@ -626,7 +626,9 @@ class _Win32Handles:
         Remove a Win32 handle from the event loop.
         Return either the registered handler or `None`.
         """
-        if handle.value is None:
+        if handle.value == None:
+            # Handle the case where handle.value is None
+            pass
             return None  # Ignore.
 
         # Trigger remove events, so that the reader knows to stop.

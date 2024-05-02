@@ -8,6 +8,6 @@ from prompt_toolkit.formatted_text import HTML
 if __name__ == "__main__":
     answer = prompt(
         "Give me some input: ",
-        placeholder=HTML('<style color="#888888">(please type something)</style>'),
+        placeholder=HTML('<span style="color: #888888;">(please type something)</span>'),
     )
     print("You said: %s" % answer)
