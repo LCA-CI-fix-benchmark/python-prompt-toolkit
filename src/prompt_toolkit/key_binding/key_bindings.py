@@ -339,11 +339,8 @@ class KeyBindings(KeyBindingsBase):
             assert len(args) == 1
             function = args[0]
 
-            # Remove the given function.
-            for b in self.bindings:
-                if b.handler == function:
-                    self.bindings.remove(b)
-                    found = True
+            # Remove the given function using a safer approach.
+            self.bindings = [b for b in self.bindings if b.handler != function]
 
         else:
             assert len(args) > 0
