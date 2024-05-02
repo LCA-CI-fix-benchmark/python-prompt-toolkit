@@ -323,5 +323,4 @@ class PygmentsLexer(Lexer):
 
                         return cache[num]
             return []
-
         return get_line

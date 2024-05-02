@@ -9,7 +9,6 @@ This creates a problem: potentially, we read too much from stdin. Sometimes
 people paste several lines at once because they paste input in a REPL and
 expect each input() call to process one line. Or they rely on type ahead
 because the application can't keep up with the processing.
-
 However, we need to read input in bigger chunks. We need this mostly to support
 pasting of larger chunks of text. We don't want everything to become
 unresponsive because we:

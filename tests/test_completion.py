@@ -165,7 +165,6 @@ def test_pathcompleter_respects_completions_under_min_input_len():
     for i in range(10):
         with open(os.path.join(test_dir, str(i) * 2), "wb") as out:
             out.write(b"")
-
     # min len:1 and text of len 1
     with chdir(test_dir):
         completer = PathCompleter(min_input_len=1)

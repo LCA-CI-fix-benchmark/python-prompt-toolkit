@@ -435,7 +435,6 @@ class ScrollablePane(Container):
 
         if display_arrows:
             window_height -= 2
-
         try:
             fraction_visible = write_position.height / float(content_height)
             fraction_above = self.vertical_scroll / float(content_height)

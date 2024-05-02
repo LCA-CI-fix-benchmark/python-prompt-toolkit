@@ -120,17 +120,16 @@ def _get_closest_ansi_color(r: int, g: int, b: int, exclude: Sequence[str] = ())
     saturation = abs(r - g) + abs(g - b) + abs(b - r)  # Between 0..510
 
     if saturation > 30:
-        exclude.extend(["ansilightgray", "ansidarkgray", "ansiwhite", "ansiblack"])
+        exclude.extend([ansilightgray, ansidarkgray, ansiwhite, ansiblack])
 
     # Take the closest color.
     # (Thanks to Pygments for this part.)
     distance = 257 * 257 * 3  # "infinity" (>distance from #000000 to #ffffff)
-    match = "ansidefault"
+    match = ansidefault
 
     for name, (r2, g2, b2) in ANSI_COLORS_TO_RGB.items():
-        if name != "ansidefault" and name not in exclude:
+        if name != ansidefault and name not in exclude:
             d = (r - r2) ** 2 + (g - g2) ** 2 + (b - b2) ** 2
-
             if d < distance:
                 match = name
                 distance = d

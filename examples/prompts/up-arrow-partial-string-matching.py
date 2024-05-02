@@ -8,7 +8,6 @@ history on the items starting with the given input text.
 from prompt_toolkit import PromptSession
 from prompt_toolkit.history import InMemoryHistory
 
-
 def main():
     # Create some history first. (Easy for testing.)
     history = InMemoryHistory()
