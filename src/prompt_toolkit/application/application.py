@@ -739,7 +739,7 @@ class Application(Generic[_AppResult]):
                 self._redraw()
                 self._start_auto_refresh_task()
 
-                self.create_background_task(self._poll_output_size())
+                self.create_background_task(self._poll_output_size)
 
                 # Wait for UI to finish.
                 try:

@@ -128,7 +128,6 @@ class InputHookSelector(BaseSelector):
 
         ready = False
         result = None
-
         # Run selector in other thread.
         def run_selector() -> None:
             nonlocal ready, result
