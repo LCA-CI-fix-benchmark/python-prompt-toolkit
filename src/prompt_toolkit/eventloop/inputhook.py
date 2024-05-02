@@ -82,10 +82,11 @@ def set_eventloop_with_inputhook(
     """
     Create a new event loop with the given inputhook, and activate it.
     """
-    # Deprecated!
 
     loop = new_eventloop_with_inputhook(inputhook)
     asyncio.set_event_loop(loop)
+    
+    return loop
     return loop
 
 
