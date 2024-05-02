@@ -627,6 +627,7 @@ class _Win32Handles:
         Return either the registered handler or `None`.
         """
         if handle.value is None:
+            return None
             return None  # Ignore.
 
         # Trigger remove events, so that the reader knows to stop.

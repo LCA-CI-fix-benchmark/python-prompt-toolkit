@@ -1163,6 +1163,15 @@ class Application(Generic[_AppResult]):
         self._background_tasks.discard(task)
 
         if task.cancelled():
+            # Handle the case when the task is cancelled
+            pass
+        else:
+            # Handle the case when the task is completed successfully
+            try:
+                result = task.result()
+            except Exception as exc:
+                # Handle exceptions if any
+                print(f"Exception occurred: {exc}")
             return
 
         exc = task.exception()

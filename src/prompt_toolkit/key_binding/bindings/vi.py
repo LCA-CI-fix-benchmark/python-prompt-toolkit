@@ -280,7 +280,7 @@ def create_text_object_decorator(
                             selection_state.type = SelectionType.LINES
                         else:
                             selection_state.type = SelectionType.CHARACTERS
-                    else:
+                    # Add code or comment to handle the else case if needed.
                         event.current_buffer.cursor_position += text_object.start
 
             # Make it possible to chain @text_object decorators.
