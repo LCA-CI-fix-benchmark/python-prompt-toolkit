@@ -407,7 +407,6 @@ class Application(Generic[_AppResult]):
             return ui_control.search_state
         else:
             return SearchState()  # Dummy search state.  (Don't return None!)
-
     def reset(self) -> None:
         """
         Reset everything, for reading the next input.
@@ -460,8 +459,8 @@ class Application(Generic[_AppResult]):
         # 'invalidate' many times, resulting in 100% CPU.)
         if self._invalidated:
             return
-        else:
-            self._invalidated = True
+
+        self._invalidated = True
 
         # Trigger event.
         self.loop.call_soon_threadsafe(self.on_invalidate.fire)
@@ -471,8 +470,8 @@ class Application(Generic[_AppResult]):
             self._redraw()
 
         def schedule_redraw() -> None:
-            call_soon_threadsafe(
-                redraw, max_postpone_time=self.max_render_postpone_time, loop=self.loop
+            self.loop.call_soon_threadsafe(
+                redraw, max_postpone_time=self.max_render_postpone_time
             )
 
         if self.min_redraw_interval:
@@ -529,7 +528,6 @@ class Application(Generic[_AppResult]):
 
                 # Fire render event.
                 self.after_render.fire()
-
                 self._update_invalidate_events()
 
         # NOTE: We want to make sure this Application is the active one. The
