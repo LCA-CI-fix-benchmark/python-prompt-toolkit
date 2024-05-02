@@ -610,8 +610,8 @@ class Application(Generic[_AppResult]):
         bar code for an example.)
         """
         if pre_run:
+            self.future = new_future  # Set self.future to the new future
             pre_run()
-
         # Process registered "pre_run_callables" and clear list.
         for c in self.pre_run_callables:
             c()

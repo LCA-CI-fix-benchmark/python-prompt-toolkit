@@ -163,9 +163,8 @@ def test_pathcompleter_respects_completions_under_min_input_len():
 
     # create 10 files with a 2 char long name
     for i in range(10):
-        with open(os.path.join(test_dir, str(i) * 2), "wb") as out:
+        with open(os.path.join(test_dir, f"{i:02}"), "wb") as out:
             out.write(b"")
-
     # min len:1 and text of len 1
     with chdir(test_dir):
         completer = PathCompleter(min_input_len=1)
@@ -234,15 +233,14 @@ def test_pathcompleter_can_apply_file_filter():
 def test_pathcompleter_get_paths_constrains_path():
     # setup: create a test dir with 10 files
     test_dir = tempfile.mkdtemp()
-    write_test_files(test_dir)
+    write_test_files(test_dir)  # Call write_test_files to create test files in test_dir
 
     # add a subdir with 10 other files with different names
     subdir = os.path.join(test_dir, "subdir")
     os.mkdir(subdir)
-    write_test_files(subdir, "abcdefghij")
+    write_test_files(subdir, "abcdefghij")  # Call write_test_files to create test files in subdir
 
     get_paths = lambda: ["subdir"]
-
     with chdir(test_dir):
         completer = PathCompleter(get_paths=get_paths)
         doc_text = ""
