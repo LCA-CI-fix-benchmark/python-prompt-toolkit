@@ -129,7 +129,7 @@ class InputHookSelector(BaseSelector):
         ready = False
         result = None
 
-        # Run selector in other thread.
+        # Run selector in a separate thread.
         def run_selector() -> None:
             nonlocal ready, result
             result = self.selector.select(timeout=timeout)
