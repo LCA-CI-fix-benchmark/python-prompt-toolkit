@@ -72,8 +72,7 @@ def new_eventloop_with_inputhook(
     Create a new event loop with the given inputhook.
     """
     selector = InputHookSelector(selectors.DefaultSelector(), inputhook)
-    loop = asyncio.SelectorEventLoop(selector)
-    return loop
+    return asyncio.SelectorEventLoop(selector)
 
 
 def set_eventloop_with_inputhook(
