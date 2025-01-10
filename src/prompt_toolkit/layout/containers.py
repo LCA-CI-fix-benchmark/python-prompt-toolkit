@@ -233,7 +233,7 @@ class _Split(Container):
 
 class HSplit(_Split):
     """
-    Several layouts, one stacked above/under the other. ::
+    Several layouts, one stacked above/under the other.::
 
         +--------------------+
         |                    |
@@ -249,10 +249,10 @@ class HSplit(_Split):
 
     :param children: List of child :class:`.Container` objects.
     :param window_too_small: A :class:`.Container` object that is displayed if
-        there is not enough space for all the children. By default, this is a
+        there is not enough space for all the children. By default, this is a 
         "Window too small" message.
-    :param align: `VerticalAlign` value.
-    :param width: When given, use this width instead of looking at the children.
+    :param align: :class:`VerticalAlign` value.
+    :param width: When given, use this width instead of looking at the children. 
     :param height: When given, use this height instead of looking at the children.
     :param z_index: (int or None) When specified, this can be used to bring
         element in front of floating elements.  `None` means: inherit from parent.
