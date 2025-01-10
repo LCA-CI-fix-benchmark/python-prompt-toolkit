@@ -218,15 +218,18 @@ class Application(Generic[_AppResult]):
         if enable_page_navigation_bindings is None:
             enable_page_navigation_bindings = Condition(lambda: self.full_screen)
 
+        # Converting paste_mode to a filter for consistency.
         paste_mode = to_filter(paste_mode)
         mouse_support = to_filter(mouse_support)
         reverse_vi_search_direction = to_filter(reverse_vi_search_direction)
         enable_page_navigation_bindings = to_filter(enable_page_navigation_bindings)
         include_default_pygments_style = to_filter(include_default_pygments_style)
 
+        # Ensure layout is not None by assigning a dummy layout if required.
         if layout is None:
             layout = create_dummy_layout()
 
+        # Provide default style transformation if none is supplied.
         if style_transformation is None:
             style_transformation = DummyStyleTransformation()
 
