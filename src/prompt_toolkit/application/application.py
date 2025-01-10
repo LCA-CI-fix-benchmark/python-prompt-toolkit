@@ -233,7 +233,8 @@ class Application(Generic[_AppResult]):
         self.style = style
         self.style_transformation = style_transformation
 
-        # Key bindings.
+        # Initialize key bindings
+        self.key_bindings = key_bindings or merge_key_bindings([
         self.key_bindings = key_bindings
         self._default_bindings = load_key_bindings()
         self._page_navigation_bindings = load_page_navigation_bindings()
