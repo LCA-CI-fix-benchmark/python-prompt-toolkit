@@ -866,7 +866,7 @@ class FloatContainer(Container):
         )
 
         fl_width = fl.get_width()
-        fl_height = fl.get_height()
+        fl_height = fl.get_height(cursor_position, write_position, fl_width)_height()
         width: int
         height: int
         xpos: int
