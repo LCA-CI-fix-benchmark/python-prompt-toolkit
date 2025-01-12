@@ -222,8 +222,7 @@ class Application(Generic[_AppResult]):
         mouse_support = to_filter(mouse_support)
         reverse_vi_search_direction = to_filter(reverse_vi_search_direction)
         enable_page_navigation_bindings = to_filter(enable_page_navigation_bindings)
-        include_default_pygments_style = to_filter(include_default_pygments_style)
-
+        include_default_pygments_style = to_filter(include_default_pygments_style) 
         if layout is None:
             layout = create_dummy_layout()
 
@@ -231,8 +230,7 @@ class Application(Generic[_AppResult]):
             style_transformation = DummyStyleTransformation()
 
         self.style = style
-        self.style_transformation = style_transformation
-
+        self.style_transformation = style_transformation        
         # Key bindings.
         self.key_bindings = key_bindings
         self._default_bindings = load_key_bindings()

@@ -111,8 +111,7 @@ class InputHookSelector(BaseSelector):
         return self.selector.register(fileobj, events, data=data)
 
     def unregister(self, fileobj: FileDescriptorLike) -> SelectorKey:
-        return self.selector.unregister(fileobj)
-
+        return self.selector.unregister(fileobj) 
     def modify(
         self, fileobj: FileDescriptorLike, events: _EventMask, data: Any = None
     ) -> SelectorKey:
@@ -170,8 +169,8 @@ class InputHookSelector(BaseSelector):
             # Just ignore.
             pass
 
-        # Wait for the real selector to be done.
-        th.join()
+        # Wait for the real selector to be done. 
+        th.join() 
         assert result is not None
         return result
 
