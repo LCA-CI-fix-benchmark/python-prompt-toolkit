@@ -109,7 +109,26 @@ class Application(Generic[_AppResult]):
 
     :param layout: A :class:`~prompt_toolkit.layout.Layout` instance.
     :param key_bindings:
-        :class:`~prompt_toolkit.key_binding.KeyBindingsBase` instance for
+        if key_bindings is None:
+            key_bindings = load_key_bindings()
+        self.key_bindings = key_bindings
+
+        self.clipboard = clipboard or InMemoryClipboard()
+        self.full_screen = full_screen
+        self._color_depth = color_depth
+        self.erase_when_done = erase_when_done
+
+        self.reverse_vi_search_direction = reverse_vi_search_direction
+
+        # Min amount of seconds between redraws.
+        # This is to make sure that a redraw won't happen too soon after the
+        # previous one, so when the UI does a lot of updates, the terminal
+        # won't suffer from flickering.
+        self.min_redraw_interval = min_redraw_interval
+        self.max_render_postpone_time = max_render_postpone_time
+
+        self.refresh_interval = refresh_interval
+        self.terminal_size_polling_interval = terminal_size_polling_interval :class:`~prompt_toolkit.key_binding.KeyBindingsBase` instance for
         the key bindings.
     :param clipboard: :class:`~prompt_toolkit.clipboard.Clipboard` to use.
     :param full_screen: When True, run the application on the alternate screen buffer.
