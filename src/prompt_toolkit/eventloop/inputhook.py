@@ -139,6 +139,7 @@ class InputHookSelector(BaseSelector):
         th = threading.Thread(target=run_selector)
         th.start()
 
+        @staticmethod
         def input_is_ready() -> bool:
             return ready
 
@@ -179,6 +180,7 @@ class InputHookSelector(BaseSelector):
         """
         Clean up resources.
         """
+
         if self._r:
             os.close(self._r)
             os.close(self._w)

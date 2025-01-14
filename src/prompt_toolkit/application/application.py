@@ -109,7 +109,10 @@ class Application(Generic[_AppResult]):
 
     :param layout: A :class:`~prompt_toolkit.layout.Layout` instance.
     :param key_bindings:
-        :class:`~prompt_toolkit.key_binding.KeyBindingsBase` instance for
+        if key_bindings is None:
+            key_bindings = load_key_bindings()
+        else:
+            key_bindings = merge_key_bindings([load_key_bindings(), key_bindings]) :class:`~prompt_toolkit.key_binding.KeyBindingsBase` instance for
         the key bindings.
     :param clipboard: :class:`~prompt_toolkit.clipboard.Clipboard` to use.
     :param full_screen: When True, run the application on the alternate screen buffer.
