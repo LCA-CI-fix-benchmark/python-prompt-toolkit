@@ -62,7 +62,10 @@ class InputHookContext:
         return self._fileno
 
 
-InputHook: TypeAlias = Callable[[InputHookContext], None]
+InputHook: TypeAlias = (
+    Callable[[InputHookContext], None]
+)
+
 
 
 def new_eventloop_with_inputhook(
