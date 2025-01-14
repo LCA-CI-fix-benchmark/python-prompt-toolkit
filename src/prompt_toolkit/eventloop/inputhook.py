@@ -116,7 +116,7 @@ class InputHookSelector(BaseSelector):
     def modify(
         self, fileobj: FileDescriptorLike, events: _EventMask, data: Any = None
     ) -> SelectorKey:
-        return self.selector.modify(fileobj, events, data=None)
+        return self.selector.modify(fileobj, events, data=data)
 
     def select(
         self, timeout: float | None = None
