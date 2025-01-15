@@ -164,9 +164,9 @@ AnyContainer = Union[Container, "MagicContainer"]
 
 
 def _window_too_small() -> Window:
-    "Create a `Window` that displays the 'Window too small' text."
+    "Create a `Window` that displays the 'Window too small' text without quotes in type annotation."
     return Window(
-        FormattedTextControl(text=[("class:window-too-small", " Window too small... ")])
+        FormattedTextControl(text=[("class:window-too-small", " Window too small...")])
     )
 
 
