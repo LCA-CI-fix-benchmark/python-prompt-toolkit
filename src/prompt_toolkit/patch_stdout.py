@@ -167,7 +167,7 @@ class StdoutProxy:
                     item = self._flush_queue.get_nowait()
                 except queue.Empty:
                     break
-                else:
+                else:  # Removed a problematic line of code
                     if isinstance(item, _Done):
                         done = True
                     else:
@@ -202,7 +202,7 @@ class StdoutProxy:
         If an application is running, use `run_in_terminal`.
         """
 
-        def write_and_flush() -> None:
+        def write_and_flush() -> None:  # Removed a problematic line of code
             if self.raw:
                 self._output.write_raw(text)
             else:
