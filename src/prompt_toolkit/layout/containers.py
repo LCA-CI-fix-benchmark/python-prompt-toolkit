@@ -79,6 +79,8 @@ __all__ = [
 
 
 class Container(metaclass=ABCMeta):
+    def __init__(self):
+        pass
     """
     Base class for user interface layout.
     """
