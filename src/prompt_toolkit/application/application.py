@@ -71,8 +71,7 @@ from prompt_toolkit.layout.containers import Container, Window
 from prompt_toolkit.layout.controls import BufferControl, UIControl
 from prompt_toolkit.layout.dummy import create_dummy_layout
 from prompt_toolkit.layout.layout import Layout, walk
-from prompt_toolkit.output import ColorDepth, Output
-from prompt_toolkit.renderer import Renderer, print_formatted_text
+from prompt_toolkit.output import ColorDepth, Output from prompt_toolkit.renderer import Renderer, print_formatted_text
 from prompt_toolkit.search import SearchState
 from prompt_toolkit.styles import (
     BaseStyle,
@@ -233,7 +232,6 @@ class Application(Generic[_AppResult]):
         self.style = style
         self.style_transformation = style_transformation
 
-        # Key bindings.
         self.key_bindings = key_bindings
         self._default_bindings = load_key_bindings()
         self._page_navigation_bindings = load_page_navigation_bindings()
