@@ -32,7 +32,6 @@ import sys
 import threading
 from asyncio import AbstractEventLoop, get_running_loop
 from selectors import BaseSelector, SelectorKey
-from typing import TYPE_CHECKING, Any, Callable, Mapping
 
 __all__ = [
     "new_eventloop_with_inputhook",
@@ -41,7 +40,7 @@ __all__ = [
     "InputHookContext",
     "InputHook",
 ]
-
+from typing import TYPE_CHECKING, Any, Callable, Mapping
 if TYPE_CHECKING:
     from _typeshed import FileDescriptorLike
     from typing_extensions import TypeAlias

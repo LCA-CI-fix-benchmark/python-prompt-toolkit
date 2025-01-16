@@ -193,7 +193,8 @@ class Application(Generic[_AppResult]):
         clipboard: Clipboard | None = None,
         full_screen: bool = False,
         color_depth: (ColorDepth | Callable[[], ColorDepth | None] | None) = None,
-        mouse_support: FilterOrBool = False,
+        mouse_support: FilterOrBool = False,  
+        # fmt: off
         enable_page_navigation_bindings: None
         | (FilterOrBool) = None,  # Can be None, True or False.
         paste_mode: FilterOrBool = False,
@@ -212,6 +213,7 @@ class Application(Generic[_AppResult]):
         # I/O.
         input: Input | None = None,
         output: Output | None = None,
+        # fmt: on
     ) -> None:
         # If `enable_page_navigation_bindings` is not specified, enable it in
         # case of full screen applications only. This can be overridden by the user.
