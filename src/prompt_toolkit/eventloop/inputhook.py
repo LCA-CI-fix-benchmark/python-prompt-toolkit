@@ -103,7 +103,7 @@ class InputHookSelector(BaseSelector):
     ) -> None:
         self.selector = selector
         self.inputhook = inputhook
-        self._r, self._w = os.pipe()
+         self._r, self._w = os.pipe()
 
     def register(
         self, fileobj: FileDescriptorLike, events: _EventMask, data: Any = None
