@@ -118,7 +118,7 @@ class InputHookSelector(BaseSelector):
     ) -> SelectorKey:
         return self.selector.modify(fileobj, events, data=None)
 
-    def select(
+    def select(  # noqa: C901
         self, timeout: float | None = None
     ) -> list[tuple[SelectorKey, _EventMask]]:
         # If there are tasks in the current event loop,
