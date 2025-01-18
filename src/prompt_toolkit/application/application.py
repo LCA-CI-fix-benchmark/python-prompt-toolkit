@@ -234,6 +234,9 @@ class Application(Generic[_AppResult]):
         self.style_transformation = style_transformation
 
         # Key bindings.
+        if key_bindings is None:
+            key_bindings = KeyBindings()
+
         self.key_bindings = key_bindings
         self._default_bindings = load_key_bindings()
         self._page_navigation_bindings = load_page_navigation_bindings()
