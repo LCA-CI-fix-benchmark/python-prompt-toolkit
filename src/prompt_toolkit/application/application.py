@@ -195,7 +195,7 @@ class Application(Generic[_AppResult]):
         color_depth: (ColorDepth | Callable[[], ColorDepth | None] | None) = None,
         mouse_support: FilterOrBool = False,
         enable_page_navigation_bindings: None
-        | (FilterOrBool) = None,  # Can be None, True or False.
+        | FilterOrBool = None,  # Can be None, True, or False.
         paste_mode: FilterOrBool = False,
         editing_mode: EditingMode = EditingMode.EMACS,
         erase_when_done: bool = False,
