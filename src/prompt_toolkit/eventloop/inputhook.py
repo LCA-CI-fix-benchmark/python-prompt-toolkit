@@ -30,7 +30,10 @@ import select
 import selectors
 import sys
 import threading
-from asyncio import AbstractEventLoop, get_running_loop
+from asyncio import (
+    AbstractEventLoop,
+    get_running_loop,
+)
 from selectors import BaseSelector, SelectorKey
 from typing import TYPE_CHECKING, Any, Callable, Mapping
 
