@@ -192,10 +192,13 @@ class Application(Generic[_AppResult]):
         key_bindings: KeyBindingsBase | None = None,
         clipboard: Clipboard | None = None,
         full_screen: bool = False,
-        color_depth: (ColorDepth | Callable[[], ColorDepth | None] | None) = None,
+        color_depth: (
+            ColorDepth | Callable[[], ColorDepth | None] | None
+        ) = None,
         mouse_support: FilterOrBool = False,
-        enable_page_navigation_bindings: None
-        | (FilterOrBool) = None,  # Can be None, True or False.
+        enable_page_navigation_bindings: (
+            None | (FilterOrBool)
+        ) = None,  # Can be None, True or False.
         paste_mode: FilterOrBool = False,
         editing_mode: EditingMode = EditingMode.EMACS,
         erase_when_done: bool = False,
@@ -209,7 +212,6 @@ class Application(Generic[_AppResult]):
         on_invalidate: ApplicationEventHandler[_AppResult] | None = None,
         before_render: ApplicationEventHandler[_AppResult] | None = None,
         after_render: ApplicationEventHandler[_AppResult] | None = None,
-        # I/O.
         input: Input | None = None,
         output: Output | None = None,
     ) -> None:

@@ -99,7 +99,9 @@ class InputHookSelector(BaseSelector):
     """
 
     def __init__(
-        self, selector: BaseSelector, inputhook: Callable[[InputHookContext], None]
+        self,
+        selector: BaseSelector,
+        inputhook: Callable[[InputHookContext], None],
     ) -> None:
         self.selector = selector
         self.inputhook = inputhook
